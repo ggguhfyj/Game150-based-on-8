@@ -20,13 +20,16 @@ namespace CS230 {
         void SetPosition(Math::vec2 new_position);
         const Math::vec2& GetPosition() const;
         void SetLimit(Math::irect new_limit);
+        void SetRotation(double rotation);
         void Update(const Math::vec2& player_position);
-
         Math::TransformationMatrix GetMatrix();
-        
+        Math::TransformationMatrix GetoffsetMatrix();
     private:
+        double camerarotation = 0;
         Math::irect limit;
         Math::vec2 position;
+        Math::vec2 offsetposition;
         Math::rect player_zone;
+
     };
 }

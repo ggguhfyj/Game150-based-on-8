@@ -41,5 +41,8 @@ namespace Math {
     public:
         RotationMatrix(double theta);
     };
-
+    class SkewMatrix : public TransformationMatrix {
+    public:
+        SkewMatrix(double lx, double ly);
+    };
 }

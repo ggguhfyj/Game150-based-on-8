@@ -36,10 +36,11 @@
     <ClCompile Include="Engine\Window.cpp" />
     <ClCompile Include="Game\Asteroid.cpp" />
     <ClCompile Include="Game\background.cpp" />
+    <ClCompile Include="Game\Car.cpp" />
     <ClCompile Include="Game\Cat.cpp" />
     <ClCompile Include="Game\Crates.cpp" />
     <ClCompile Include="Game\Gam150.cpp" />
-    <ClCompile Include="Game\Gam150Player.cpp" />
+    <ClCompile Include="Game\Road.cpp" />
     <ClCompile Include="Game\MainMenu.cpp" />
     <ClCompile Include="Game\mapGen.cpp" />
     <ClCompile Include="Game\Meteor.cpp" />
@@ -71,10 +72,11 @@
     <ClInclude Include="Engine\Window.h" />
     <ClInclude Include="Game\Asteroid.h" />
     <ClInclude Include="Game\background.h" />
+    <ClInclude Include="Game\Car.h" />
     <ClInclude Include="Game\Cat.h" />
     <ClInclude Include="Game\Crates.h" />
     <ClInclude Include="Game\Gam150.h" />
-    <ClInclude Include="Game\Gam150Player.h" />
+    <ClInclude Include="Game\Road.h" />
     <ClInclude Include="Game\MainMenu.h" />
     <ClInclude Include="Game\mapGen.h" />
     <ClInclude Include="Game\Meteor.h" />

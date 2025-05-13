@@ -93,3 +93,11 @@ Math::RotationMatrix::RotationMatrix(double theta) {
     matrix[1][1] = cosTheta;
     // matrix[2][2] remains 1, others remain 0
 }
+
+Math::SkewMatrix::SkewMatrix(double x, double y) {
+    Reset(); // Start with identity matrix
+
+    matrix[0][2] = x;
+    matrix[1][2] = y;
+    // matrix[2][2] remains 1, others remain 0
+}

@@ -15,12 +15,9 @@ Created:    March 8, 2023
 #include <cmath>
 
 Cat::Cat(Math::vec2 start_position, const CS230::Camera& camera) :
-    //start_position(start_position),
-    //velocity({ 0.0,0.0 }),
-    //position(start_position),
+
     camera(camera),
     current_state(&state_idle)
-    //flipped(false)
     
 {
     

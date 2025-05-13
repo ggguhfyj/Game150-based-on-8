@@ -18,7 +18,7 @@ Updated:        March 23, 2025
 
 Mode1::Mode1() :
   
-    camera({ { 0.15 * Engine::GetWindow().GetSize().x, 0 }, { 0.35 * Engine::GetWindow().GetSize().x, 0 } })
+    camera({ { 0.15 * Engine::GetWindow().GetSize().x, 0 }, { 0.15 * Engine::GetWindow().GetSize().x, 0 } })//player zone
 {
 
 }
@@ -66,7 +66,7 @@ void Mode1::Update([[maybe_unused]] double dt) {
     gameobjectmanager.UpdateAll(dt);
 
     camera.Update(cat_ptr->GetPosition());
-
+    Engine::GetLogger().LogEvent(std::to_string(camera.GetPosition().x) + " , " + std::to_string(camera.GetPosition().y) + "\n");
 
     if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Enter)) {
         Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::Mode2));
@@ -74,6 +74,7 @@ void Mode1::Update([[maybe_unused]] double dt) {
     if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::R)) {
         Engine::GetGameStateManager().ReloadState();
     }
+
     timer -= dt;
     if (static_cast<int>(timer) < last_timer) {
         last_timer = static_cast<int>(timer);

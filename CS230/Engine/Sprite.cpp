@@ -145,7 +145,6 @@ namespace CS230 {
 
         return frame_size;
     }
-
     void Sprite::PlayAnimation(int animation)
     {
         if (animation < 0 || animation >= static_cast<int>(animations.size())) {

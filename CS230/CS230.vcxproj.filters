@@ -91,10 +91,13 @@
     <ClCompile Include="Game\Gam150.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Gam150Player.cpp">
+    <ClCompile Include="Game\Road.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\mapGen.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Car.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -192,10 +195,13 @@
     <ClInclude Include="Game\Gam150.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Gam150Player.h">
+    <ClInclude Include="Game\Road.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\mapGen.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Car.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

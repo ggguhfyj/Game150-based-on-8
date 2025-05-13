@@ -2,34 +2,30 @@
 Copyright (C) 2023 DigiPen Institute of Technology
 Reproduction or distribution of this file or its contents without
 prior written consent is prohibited
-File Name:  Ship.h
+File Name:  Road.h
 Project:    CS230 Engine
 Author:     Junseok lee
 Created:    March 29, 2025
 */
 #pragma once
-//#include "..\Engine\Sprite.h"
-//#include "..\Engine\Vec2.h"
 #include "..\Engine\Input.h"
 #include "..\Engine\Window.h"
 #include "..\Engine\Matrix.h"
 #include "..\Engine\GameObject.h"
 
-class Ship: public CS230::GameObject {
+class Road : public CS230::GameObject {
 public:
-	Ship(Math::vec2 position);
-	//void Load();
+	Road();
+	Road(Math::vec2 position);
 	void Update(double dt);
 	void Draw(Math::TransformationMatrix camera_matrix);
-	void Reset();
+	
+	//void Reset();
+	
 private:
-	enum class FlameAnim {
-		None,
-		Flame
-	};
-	CS230::Sprite sprite;
-	CS230::Sprite flame_left;
-	CS230::Sprite flame_right;
+
+
+	CS230::Sprite road;//for mode7
 	Math::vec2 start_position;
 	Math::vec2 position;
 	Math::vec2 velocity;
@@ -38,10 +34,8 @@ private:
 
 	static constexpr double speed = 700;
 	static constexpr double drag = 1;
-
 	static constexpr double rotation_speed = 5;
 	static constexpr double scale = 0.75;
-	bool drawflame = false;
-	bool flame_is_on = false;
+
 
 };

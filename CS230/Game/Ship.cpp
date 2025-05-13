@@ -69,7 +69,7 @@ void Ship::Update([[maybe_unused]] double dt) {
 
     Math::ivec2 windowSize = Engine::GetWindow().GetSize();
     Math::ivec2 spriteSize = sprite.GetFrameSize();
-
+    ////////////////////////////////////////////////////////
     if (GetPosition().x < -spriteSize.x) {
         SetPosition({ (double)windowSize.x,GetPosition().y });
 

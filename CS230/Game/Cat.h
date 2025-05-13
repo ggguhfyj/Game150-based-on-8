@@ -80,18 +80,11 @@ private:
 
     void change_state(State* new_state);
     State* current_state = nullptr;
-    //CS230::Sprite sprite;
-    //Math::vec2 start_position; we dont need this anymnore in 7.1
-    //Math::vec2 position;
-    //Math::vec2 velocity;
     const CS230::Camera& camera;
-    //Math::TransformationMatrix object_matrix;
     static constexpr double x_acceleration = 300;
     static constexpr double x_drag = 200;
     static constexpr double max_velocity = 250;
     static constexpr double jump_velocity = 650;
-    
-    //bool flipped = false;
     bool jumping = false;
     bool going_up = false;
     enum class Animations {

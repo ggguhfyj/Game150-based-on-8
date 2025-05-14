@@ -45,4 +45,8 @@ namespace Math {
     public:
         SkewMatrix(double lx, double ly);
     };
+    class PerspectiveMatrix : public TransformationMatrix {
+    public:
+        //PerspectiveMatrix(double lx, double ly);
+    };
 }

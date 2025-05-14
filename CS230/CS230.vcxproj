@@ -40,6 +40,7 @@
     <ClCompile Include="Game\Cat.cpp" />
     <ClCompile Include="Game\Crates.cpp" />
     <ClCompile Include="Game\Gam150.cpp" />
+    <ClCompile Include="Game\Mode7.cpp" />
     <ClCompile Include="Game\Road.cpp" />
     <ClCompile Include="Game\MainMenu.cpp" />
     <ClCompile Include="Game\mapGen.cpp" />
@@ -76,6 +77,7 @@
     <ClInclude Include="Game\Cat.h" />
     <ClInclude Include="Game\Crates.h" />
     <ClInclude Include="Game\Gam150.h" />
+    <ClInclude Include="Game\Mode7.h" />
     <ClInclude Include="Game\Road.h" />
     <ClInclude Include="Game\MainMenu.h" />
     <ClInclude Include="Game\mapGen.h" />

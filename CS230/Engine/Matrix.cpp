@@ -101,3 +101,8 @@ Math::SkewMatrix::SkewMatrix(double x, double y) {
     matrix[1][2] = y;
     // matrix[2][2] remains 1, others remain 0
 }
+
+//Math::PerspectiveMatrix::PerspectiveMatrix(double lx, double ly)
+//{
+//
+//}

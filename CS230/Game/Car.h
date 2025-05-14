@@ -20,9 +20,9 @@ public:
 	void Update(double dt);
 	void Draw(Math::TransformationMatrix camera_matrix);// this only exists in ship maybe delete>
 
-
+	static inline bool visible = true;
 private:
-
+	
 
 	CS230::Sprite car;
 
@@ -31,7 +31,7 @@ private:
 	Math::vec2 velocity;
 
 	Math::TransformationMatrix car_matrix;
-
+	
 	static constexpr double speed = 700;
 	static constexpr double drag = 1;
 	static constexpr double rotation_speed = 5;

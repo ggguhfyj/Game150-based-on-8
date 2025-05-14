@@ -17,7 +17,7 @@ Updated:    March 23, 2025
 #include "../Engine/Texture.h"
 #include "../Engine/Sprite.h"
 #include "../Engine/Vec2.h"
-
+#include "..\Game\Mode7.h"
 #include "background.h"
 #include "mapGen.h"
 #include "Road.h"
@@ -38,14 +38,15 @@ public:
 
 
 private:
-    CS230::GameObjectManager gameobjectmanager;
-    
-    CS230::Camera camera;
-    Background background;
-    Road* road_ptr;
-    Car* car_ptr;
 
 
+    enum DrawMode
+    {
+        normal,
+        mode7
+
+    };
+    int drawmode = 0;
     CS230::Texture* timer_texture; // default constructor errors
     double timer;
     int last_timer;

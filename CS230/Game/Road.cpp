@@ -24,20 +24,6 @@ Road::Road(Math::vec2 start_position) :
     road.Load("Assets/groundtex.spt");
 }
 void Road::Update([[maybe_unused]] double dt) {
-    
-   /* if (Engine::GetInput().KeyDown(CS230::Input::Keys::W)) {
-        UpdatePosition({ 0, 4 });
-    }
-    if (Engine::GetInput().KeyDown(CS230::Input::Keys::S)) {
-        UpdatePosition({ 0, -4 });
-    }
-    if (Engine::GetInput().KeyDown(CS230::Input::Keys::A)) {
-        UpdateRotation(-rotation_speed * dt);
-    }
-    if (Engine::GetInput().KeyDown(CS230::Input::Keys::D)) {
-        UpdateRotation(rotation_speed * dt);
-    }*/
-
     UpdateVelocity({ -GetVelocity().x * drag * dt,-GetVelocity().y * drag * dt });
     UpdatePosition({ GetVelocity().x * dt, GetVelocity().y * dt });
     sprite.Update(dt);
@@ -46,7 +32,7 @@ void Road::Update([[maybe_unused]] double dt) {
 }
 
 void Road::Draw(Math::TransformationMatrix camera_matrix) {
-    camera_matrix;
-    road.Draw(GetMatrix()* camera_matrix );//we are not rotating te
+
+    road.Draw(camera_matrix * Math::ScaleMatrix(scale));
 }
 

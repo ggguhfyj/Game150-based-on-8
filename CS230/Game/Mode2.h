@@ -14,7 +14,8 @@ Created:    March 15, 2025
 #include "../Engine/Sprite.h"
 #include "../Game/Ship.h"
 #include "..\Engine\GameObjectManager.h"
-
+#include "..\Game\Road.h"
+#include "..\Engine\Camera.h"
 
 class Mode2 : public CS230::GameState {
 public:
@@ -33,7 +34,9 @@ public:
 
 public:
     CS230::GameObjectManager gameobjectmanager;
-    Ship ship;
+    CS230::Camera camera;
+    Ship* ship_ptr;
+    Road* road_ptr;
     CS230::Window window;
 
     static constexpr double SHIP_SPEED = 300.0;

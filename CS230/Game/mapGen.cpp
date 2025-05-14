@@ -334,6 +334,19 @@ void TestMap::drawMap(Vector2 startpoint, int zone)
 
         DrawLineEx({ drawPosX, drawPosY }, { drawPosX2, drawPosY2 }, 6, RED);
     }
+    for (int i = 0; i + 1 < Expressway_List.size(); i += 2)
+    {
+        Vector2 start = {
+            startpoint.x + (Expressway_List[i]->X_position + Expressway_List[i]->Y_position) * 50.0f,
+            startpoint.y + (Expressway_List[i]->X_position - Expressway_List[i]->Y_position) * 50.0f
+        };
+        Vector2 end = {
+            startpoint.x + (Expressway_List[i + 1]->X_position + Expressway_List[i + 1]->Y_position) * 50.0f,
+            startpoint.y + (Expressway_List[i + 1]->X_position - Expressway_List[i + 1]->Y_position) * 50.0f
+        };
+
+        DrawLineEx(start, end, 4.0f, BLUE);
+    }
     DrawText(TextFormat("roadlist size: %d", Road_List.size()), 60, 10, 10, BLACK);
     DrawText(TextFormat("drawn segments: %d", drawnRoadSegments), 60, 20, 20, BLACK);
     DrawText(TextFormat("road : (%d, %d) to (%d, %d)", Road_List.at(drawnRoadSegments)->X_position, Road_List.at(drawnRoadSegments)->Y_position, Road_List.at(drawnRoadSegments + 1)->X_position, Road_List.at(drawnRoadSegments + 1)->Y_position), 60, 50, 50, BLACK);
@@ -343,4 +356,59 @@ void TestMap::drawMap(Vector2 startpoint, int zone)
     int drawPosY2 = static_cast<int>(startpoint.y + (Road_List.at(drawnRoadSegments + 1)->X_position - Road_List.at(drawnRoadSegments + 1)->Y_position) * 50.0);
     DrawText(TextFormat(" (%d, %d) to (%d, %d)", drawPosX, drawPosY, drawPosX2, drawPosY2), 60, 100, 50, BLACK);
 
+}
+
+void TestMap::Generate_Expressway1() {
+    Expressway_List.clear();
+
+    std::vector<Position*> coords = {
+        &Map[0][4]->at(0).position,
+        &Map[0][5]->at(1).position,
+        &Map[0][5]->at(2).position,
+        &Map[0][6]->at(3).position,
+        &Map[0][7]->at(4).position,
+        &Map[0][7]->at(5).position,
+        &Map[0][7]->at(6).position
+    };
+
+    for (size_t i = 0; i < coords.size() - 1; ++i) {
+        Expressway_List.push_back(coords[i]);
+        Expressway_List.push_back(coords[i + 1]);
+    }
+}
+
+void TestMap::Generate_Expressway2() {
+    Expressway_List.clear();
+
+    std::vector<Position*> coords = {
+        &Map[1][4]->at(3).position,
+        &Map[1][5]->at(2).position,
+        &Map[1][6]->at(2).position,
+        &Map[1][7]->at(2).position,
+        &Map[1][8]->at(3).position,
+        &Map[1][9]->at(3).position
+    };
+
+    for (size_t i = 0; i < coords.size() - 1; ++i) {
+        Expressway_List.push_back(coords[i]);
+        Expressway_List.push_back(coords[i + 1]);
+    }
+}
+
+void TestMap::Generate_Expressway3() {
+    Expressway_List.clear();
+
+    std::vector<Position*> coords = {
+        &Map[2][7]->at(0).position,
+        &Map[2][7]->at(1).position,
+        &Map[2][8]->at(2).position,
+        &Map[1][7]->at(3).position,
+        &Map[2][8]->at(5).position,
+        &Map[2][7]->at(6).position
+    };
+
+    for (size_t i = 0; i < coords.size() - 1; ++i) {
+        Expressway_List.push_back(coords[i]);
+        Expressway_List.push_back(coords[i + 1]);
+    }
 }

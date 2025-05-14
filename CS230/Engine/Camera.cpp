@@ -3,6 +3,11 @@
 #include <string>
 #include "Matrix.h"
 
+CS230::Camera::Camera()
+{
+    position = { 0,0 };
+}
+
 CS230::Camera::Camera(Math::rect player_zone) : player_zone(player_zone), position({ 0.0f, 0.0f })
 {
     camerarotation = 0;
@@ -68,13 +73,25 @@ Math::TransformationMatrix CS230::Camera::GetoffsetMatrix()
     //    - Translate to screen center: Moves the final view origin to the middle.
     //    - Rotate view: Rotates by the inverse of the camera/car rotation.
     //    - Translate car to origin: Moves the point we rotate around (car's position) to (0,0).
-    Math::TranslationMatrix translate_to_center(screen_center);
+    
     Math::RotationMatrix rotate_view(-camerarotation);
-    Math::TranslationMatrix translate_car_to_origin(-position); // 'position' should match car's position
+     // 'position' should match car's position
     
     // 3. Combine the matrices. Read operations right-to-left:
     //    First, translate the world so the car is at the origin.
     //    Second, rotate the translated world.
     //    Finally, translate the rotated world so the origin (where the car is) moves to the screen center.
-    return translate_to_center * translate_car_to_origin;//*rotate_view
+    return rotate_view;
+}
+
+Math::TransformationMatrix CS230::Camera::Getoff1setMatrix()
+{
+    Math::RotationMatrix rotate_view(-camerarotation);
+    // 'position' should match car's position
+
+   // 3. Combine the matrices. Read operations right-to-left:
+   //    First, translate the world so the car is at the origin.
+   //    Second, rotate the translated world.
+   //    Finally, translate the rotated world so the origin (where the car is) moves to the screen center.
+    return rotate_view;
 }

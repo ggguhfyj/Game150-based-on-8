@@ -16,6 +16,7 @@ Created:    March 8, 2023
 namespace CS230 {
     class Camera {
     public:
+        Camera();
         Camera(Math::rect player_zone);
         void SetPosition(Math::vec2 new_position);
         const Math::vec2& GetPosition() const;
@@ -24,6 +25,7 @@ namespace CS230 {
         void Update(const Math::vec2& player_position);
         Math::TransformationMatrix GetMatrix();
         Math::TransformationMatrix GetoffsetMatrix();
+        Math::TransformationMatrix Getoff1setMatrix();
     private:
         double camerarotation = 0;
         Math::irect limit;

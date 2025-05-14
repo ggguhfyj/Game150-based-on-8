@@ -56,8 +56,11 @@ void Car::Update([[maybe_unused]] double dt) {
 }
 
 void Car::Draw(Math::TransformationMatrix camera_matrix) {
-
-    car.Draw(camera_matrix * GetMatrix());//draw the camera matrix based on the camera matrix
+    if (visible)
+    {
+        car.Draw(camera_matrix * GetMatrix());//draw the camera matrix based on the camera matrix
+    }
+    
     //car.Draw(GetMatrix());// * camera_matrix
     camera_matrix;
     

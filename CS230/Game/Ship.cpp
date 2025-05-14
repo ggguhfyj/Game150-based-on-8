@@ -62,45 +62,30 @@ void Ship::Update([[maybe_unused]] double dt) {
     }
     //velocity -= velocity * drag * dt;
     UpdateVelocity({ -GetVelocity().x * drag*dt,-GetVelocity().y * drag*dt});
-    Engine::GetLogger().LogDebug("Velocity: " + std::to_string(GetVelocity().x) + ", " + std::to_string(GetVelocity().y));
+    //Engine::GetLogger().LogDebug("Velocity: " + std::to_string(GetVelocity().x) + ", " + std::to_string(GetVelocity().y));
 
     //position += velocity * dt;
     UpdatePosition({ GetVelocity().x * dt, GetVelocity().y * dt });
 
-    Math::ivec2 windowSize = Engine::GetWindow().GetSize();
-    Math::ivec2 spriteSize = sprite.GetFrameSize();
-    ////////////////////////////////////////////////////////
-    if (GetPosition().x < -spriteSize.x) {
-        SetPosition({ (double)windowSize.x,GetPosition().y });
+   
 
-    }
-    else if (GetPosition().x - spriteSize.x/2 > windowSize.x) {
-        SetPosition({ -(double)spriteSize.x,GetPosition().y });
-    }
-
-    if (GetPosition().y < -spriteSize.y) {
-        //position.y = windowSize.y;
-        SetPosition({ GetPosition().x ,(double)windowSize.y, });
-    }
-    else if (GetPosition().y - spriteSize.y / 2 > windowSize.y) {
-        //position.y = -spriteSize.y;
-        SetPosition({ GetPosition().x ,-(double)spriteSize.y, });
-    }
     flame_right.Update(dt);
     flame_left.Update(dt);
     sprite.Update(dt);
-    object_matrix = Math::TranslationMatrix(position) * Math::RotationMatrix(GetRotation()) * Math::ScaleMatrix(scale);
+
+    //object_matrix = Math::TranslationMatrix(position) * Math::RotationMatrix(GetRotation()) * Math::ScaleMatrix(scale);
 }
 
 void Ship::Draw(Math::TransformationMatrix camera_matrix) {
     if (drawflame)
     {
-        flame_left.Draw(GetMatrix() * camera_matrix * Math::TranslationMatrix(static_cast<Math::vec2>(sprite.GetHotSpot(1))));
-        flame_right.Draw(GetMatrix() * camera_matrix * Math::TranslationMatrix(static_cast<Math::vec2>(sprite.GetHotSpot(2))));
+        flame_left.Draw(camera_matrix * Math::RotationMatrix(GetRotation()) * Math::ScaleMatrix(scale) * Math::TranslationMatrix(static_cast<Math::vec2>(sprite.GetHotSpot(1))));
+        flame_right.Draw(camera_matrix * Math::RotationMatrix(GetRotation()) * Math::ScaleMatrix(scale) * Math::TranslationMatrix(static_cast<Math::vec2>(sprite.GetHotSpot(2))));
         
     }
-    
-    sprite.Draw(GetMatrix() * camera_matrix);
+    //*camera_matrix
+    sprite.Draw(camera_matrix * Math::RotationMatrix(GetRotation()) * Math::ScaleMatrix(scale));
+
 }
 
 

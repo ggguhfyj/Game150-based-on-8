@@ -46,7 +46,7 @@ private:
         mode7
 
     };
-    int drawmode = 0;
+    int drawmode = 1;
     CS230::Texture* timer_texture; // default constructor errors
     double timer;
     int last_timer;

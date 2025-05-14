@@ -17,19 +17,27 @@ private:
 	static inline float fNear = 0.005f;
 	static inline float fFar = 50.0f;
 	static inline float fFoVHalf = PI / 4.0f;
-	static inline float fSpeed = 100.0f;
+	static inline float fSpeed = 0.0f;
+	static inline float fMaxSpeed = 300.0f;
+	static inline float fStartSpeed = 0.0f;
 	static inline float skyOffset = 0.0f;
 
 	static inline Vector2 windowsize = { 700,500 };
+
+	static inline Vector2 position = { 100,100 };
+	static inline int tabheight = 40;
 	static inline Texture2D texSky;
 	static inline Texture2D texMap;
+	static inline Texture2D windowtabs;
 	static inline Image imgMap;
 	static inline Frustum frustum;
-	static void DrawMode7Line(int y, Vector2 position);
+	static void DrawMode7Line(int y);
+	static void RepositionWindow();
+	
 public:
 	static void Load();
 	static void Update();
-	static void Draw(Vector2 position );
+	static void Draw();
 	static void unload();
 
 };

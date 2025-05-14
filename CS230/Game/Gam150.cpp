@@ -23,8 +23,9 @@ void Gam150::Load() {
     TestMap::TestDrawMap();
     TestMap::TestDrawMap2();
     TestMap::Generate_roads({ {2},{5},{0} });
+    TestMap::CreateMapTexture({ 50.0,300.0 }, 1);
     Mode7::Load();
-
+    
 }
 
 void Gam150::Draw() {
@@ -54,6 +55,10 @@ void Gam150::Update([[maybe_unused]] double dt) {
 
     if (IsKeyPressed(KEY_THREE)) {
         TestMap::Generate_Expressway3();
+    }
+
+    if (IsKeyPressed(KEY_C)) {
+        
     }
 
 }

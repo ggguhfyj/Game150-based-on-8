@@ -32,7 +32,7 @@ public:
         }Event;
 
     };
-
+    
     static inline int drawnRoadSegments = 0;
     static inline int awd = 0;
     static void Initialize_Map();
@@ -40,7 +40,8 @@ public:
     static void TestDrawMap2();
     static void push_neighbours(Position& node_position);
     static void select_neighbours(Position* current_node_ptr);
-
+    
+    static inline std::vector<Vector2> trafficlight = {};
     static inline std::vector<std::vector<Point>*> Map[6] = {};
     static inline std::vector<Point> Map_info[6] = {}; // information about points.
     static inline std::vector<Position*> Road_List; // information about points.
@@ -53,5 +54,6 @@ public:
     static inline std::vector<Position*> Expressway_List;
     // 고속도로 리스트들
     static void drawMap(Vector2 startPoint, int zone);
+    static void CreateMapTexture(Vector2 startpoint, int zone);
 
 };

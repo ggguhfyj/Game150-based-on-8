@@ -311,6 +311,8 @@ void TestMap::drawMap(Vector2 startpoint, int zone)
 {
     zone; //for unref param
     // change so we dont have to draw this all the time. it gets annoying
+    
+
     for (std::vector<std::vector<Point>*> X : Map)
     {
         for (std::vector<Point>* Y : X)
@@ -347,6 +349,7 @@ void TestMap::drawMap(Vector2 startpoint, int zone)
 
         DrawLineEx(start, end, 4.0f, BLUE);
     }
+    
     DrawText(TextFormat("roadlist size: %d", Road_List.size()), 60, 10, 10, BLACK);
     DrawText(TextFormat("drawn segments: %d", drawnRoadSegments), 60, 20, 20, BLACK);
     DrawText(TextFormat("road : (%d, %d) to (%d, %d)", Road_List.at(drawnRoadSegments)->X_position, Road_List.at(drawnRoadSegments)->Y_position, Road_List.at(drawnRoadSegments + 1)->X_position, Road_List.at(drawnRoadSegments + 1)->Y_position), 60, 50, 50, BLACK);
@@ -357,7 +360,57 @@ void TestMap::drawMap(Vector2 startpoint, int zone)
     DrawText(TextFormat(" (%d, %d) to (%d, %d)", drawPosX, drawPosY, drawPosX2, drawPosY2), 60, 100, 50, BLACK);
 
 }
+void TestMap::CreateMapTexture(Vector2 startpoint, int zone)
+{
+    zone; //for unref param
+    // change so we dont have to draw this all the time. it gets annoying
+    RenderTexture2D target = LoadRenderTexture(3000,3000);
+    BeginTextureMode(target);
+    Texture2D ground = LoadTexture("Assets/GroundTexture.png");
+    DrawTexture(ground, 0, 0, WHITE);
+    for (std::vector<std::vector<Point>*> X : Map)
+    {
+        for (std::vector<Point>* Y : X)
+        {
+            for (int node = 0; node < Y->size(); node++)
+            {
+                int drawPosX = static_cast<int>(startpoint.x + (Y->at(node).position.X_position + Y->at(node).position.Y_position) * 50.0);
+                int drawPosY = static_cast<int>(startpoint.y + (Y->at(node).position.X_position - Y->at(node).position.Y_position) * 50.0);
 
+                DrawCircle(drawPosX*3, drawPosY*3, 100, RED);
+                trafficlight.push_back(Vector2{ (float)drawPosX*3,(float)drawPosY*3 });
+
+            }
+        }
+    }
+
+    for (int node = 0; node < Road_List.size(); node += 2)
+    {
+        float drawPosX = static_cast<float>(startpoint.x + (Road_List.at(node)->X_position + Road_List.at(node)->Y_position) * 50.0);
+        float  drawPosY = static_cast<float>(startpoint.y + (Road_List.at(node)->X_position - Road_List.at(node)->Y_position) * 50.0);
+        float  drawPosX2 = static_cast<float>(startpoint.x + (Road_List.at(node + 1)->X_position + Road_List.at(node + 1)->Y_position) * 50.0);
+        float  drawPosY2 = static_cast<float>(startpoint.y + (Road_List.at(node + 1)->X_position - Road_List.at(node + 1)->Y_position) * 50.0);
+
+        DrawLineEx({ drawPosX*3, drawPosY*3 }, { drawPosX2*3, drawPosY2*3 }, 20, BLACK);
+    }
+    for (int i = 0; i + 1 < Expressway_List.size(); i += 2)
+    {
+        Vector2 start = {
+            startpoint.x + (Expressway_List[i]->X_position + Expressway_List[i]->Y_position) * 50.0f,
+            startpoint.y + (Expressway_List[i]->X_position - Expressway_List[i]->Y_position) * 50.0f
+        };
+        Vector2 end = {
+            startpoint.x + (Expressway_List[i + 1]->X_position + Expressway_List[i + 1]->Y_position) * 50.0f,
+            startpoint.y + (Expressway_List[i + 1]->X_position - Expressway_List[i + 1]->Y_position) * 50.0f
+        };
+
+        DrawLineEx({ start.x * 3,start.y * 3 }, { end.x*3,end.y*3 }, 20.0f, BLUE);
+    }
+    EndTextureMode();
+
+    Image image = LoadImageFromTexture(target.texture);
+    ExportImage(image, "CreatedMap.png");
+}
 void TestMap::Generate_Expressway1() {
     Expressway_List.clear();
 

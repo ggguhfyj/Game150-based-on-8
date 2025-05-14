@@ -1,8 +1,11 @@
+#pragma once
 #include <raylib.h>
 #include <raymath.h>
 #include "..\Engine\Engine.h"
+#include "mapGen.h"
 
 class Mode7 {
+
 private:
 	struct Frustum 
 	{
@@ -29,10 +32,12 @@ private:
 	static inline Texture2D texSky;
 	static inline Texture2D texMap;
 	static inline Texture2D windowtabs;
+	static inline Texture2D trafficlightsTex;
 	static inline Image imgMap;
 	static inline Frustum frustum;
 	static void DrawMode7Line(int y);
 	static void RepositionWindow();
+	static void ReSizeWindow();
 	
 public:
 	static void Load();

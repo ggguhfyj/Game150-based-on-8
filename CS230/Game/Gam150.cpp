@@ -23,6 +23,7 @@ void Gam150::Load() {
     TestMap::TestDrawMap();
     TestMap::TestDrawMap2();
     TestMap::Generate_roads({ {2},{5},{0} });
+    TestMap::Generate_TrafficLights();
     TestMap::CreateMapTexture({ 50.0,300.0 }, 1);
     Mode7::Load();
     

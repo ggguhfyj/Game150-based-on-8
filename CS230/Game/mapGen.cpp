@@ -5,8 +5,13 @@
 #include <string>
 #include <vector>
 #include <memory>// use smart pointers?
+#include <unordered_map>
+#include <algorithm>
+#include <random>
+#include <chrono>
 #define ROWNUM  9
 #define NODENUM  9
+
 void TestMap::Initialize_Map()
 {
     for (int i = 0; i < 6; i += 1) //looping each of the zones 0 to 5
@@ -349,7 +354,12 @@ void TestMap::drawMap(Vector2 startpoint, int zone)
 
         DrawLineEx(start, end, 4.0f, BLUE);
     }
-    
+    for (Position* pos : Traffic_Light_List) {
+        int drawPosX = (int)(startpoint.x + (pos->X_position + pos->Y_position) * 50.0);
+        int drawPosY = (int)(startpoint.y + (pos->X_position - pos->Y_position) * 50.0);
+        DrawCircle(drawPosX, drawPosY, 10, GREEN);
+    }
+
     DrawText(TextFormat("roadlist size: %d", Road_List.size()), 60, 10, 10, BLACK);
     DrawText(TextFormat("drawn segments: %d", drawnRoadSegments), 60, 20, 20, BLACK);
     DrawText(TextFormat("road : (%d, %d) to (%d, %d)", Road_List.at(drawnRoadSegments)->X_position, Road_List.at(drawnRoadSegments)->Y_position, Road_List.at(drawnRoadSegments + 1)->X_position, Road_List.at(drawnRoadSegments + 1)->Y_position), 60, 50, 50, BLACK);
@@ -406,10 +416,43 @@ void TestMap::CreateMapTexture(Vector2 startpoint, int zone)
 
         DrawLineEx({ start.x * 3,start.y * 3 }, { end.x*3,end.y*3 }, 20.0f, BLUE);
     }
+    for (Position* pos : Traffic_Light_List) {
+        int drawPosX = (int)(startpoint.x + (pos->X_position + pos->Y_position) * 50.0);
+        int drawPosY = (int)(startpoint.y + (pos->X_position - pos->Y_position) * 50.0);
+        DrawCircle(drawPosX*3, drawPosY*3, 10*3, GREEN);
+    }
+
     EndTextureMode();
 
     Image image = LoadImageFromTexture(target.texture);
     ExportImage(image, "CreatedMap.png");
+}
+void TestMap::Generate_TrafficLights()
+{
+    Traffic_Light_List.clear();
+    std::unordered_map<Position*, int> connectionCount;
+
+    // Road_List 기준으로 각 Position의 연결 수 계산
+    for (size_t i = 0; i + 1 < Road_List.size(); i += 2) {
+        connectionCount[Road_List[i]]++;
+        connectionCount[Road_List[i + 1]]++;
+    }
+
+    // 연결 수가 3인 점들만 후보로 추가
+    std::vector<Position*> candidates;
+    for (auto& [pos, count] : connectionCount) {
+        if (count == 3) {
+            candidates.push_back(pos);
+        }
+    }
+
+    // 후보 섞고 최대 4개만 선택
+    unsigned seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(candidates.begin(), candidates.end(), std::default_random_engine(seed));
+    int maxTrafficLights = std::min(4, static_cast<int>(candidates.size()));
+    for (int i = 0; i < maxTrafficLights; ++i) {
+        Traffic_Light_List.push_back(candidates[i]);
+    }
 }
 void TestMap::Generate_Expressway1() {
     Expressway_List.clear();

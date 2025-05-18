@@ -2,6 +2,30 @@
 
 //https://www.youtube.com/watch?v=0kVM6dJeWaY
 
+Vector2 Mode7::TextureMapPoint(float fx, float fy)
+{
+    float spacing = 50.0f;
+    Vector2 startpoint = { 1500, 1500 };
+
+    float sx = fx - startpoint.x;
+    float sy = fy - startpoint.y;
+
+    float x = (sx + sy) / (2.0f * spacing);
+    float y = (sx - sy) / (2.0f * spacing);
+
+    return { roundf(x), roundf(y) };
+}
+
+float Mode7::GetPlayerX()
+{
+    return fWorldX;
+}
+
+float Mode7::GetPlayerY()
+{
+    return fWorldY;
+}
+
 void Mode7::DrawMode7Line(int y)
 {
     float fSampleDepth = (float)y / (windowsize.y / 2.0f);
@@ -156,12 +180,6 @@ void Mode7::Draw()
     }
 
 
-
-
-
-
-
-
     DrawRectangle((int)position.x, (int)position.y-tabheight, (int)windowsize.x, tabheight, GRAY);
     DrawRectangle((int)position.x+5, (int)position.y - tabheight + 5, (int)windowsize.x-10, tabheight-10, BLUE);
     DrawTexture(windowtabs, (int)position.x + 10, (int)position.y - tabheight +10, WHITE);
@@ -169,6 +187,35 @@ void Mode7::Draw()
     DrawFPS((int)position.x, (int)position.y + (int)windowsize.y / 2 - 20);
     DrawText("ARROWKEYS TO MOVE, \n Q,A,W,S to change camera settings", (int)position.x, (int)position.y , 25, GREEN);
     
+
+    for (int y = 0; y < windowsize.y / 2; y++) {
+        DrawMode7Line(y);
+    }
+
+    int centerX = (int)(windowsize.x / 2.0f);
+    int centerY = (int)(windowsize.y / 4.0f);
+
+    float sampleDepth = (float)centerY / (windowsize.y / 2.0f);
+
+    float fStartX = (frustum.Far1.x - frustum.Near1.x) / sampleDepth + frustum.Near1.x;
+    float fStartY = (frustum.Far1.y - frustum.Near1.y) / sampleDepth + frustum.Near1.y;
+    float fEndX = (frustum.Far2.x - frustum.Near2.x) / sampleDepth + frustum.Near2.x;
+    float fEndY = (frustum.Far2.y - frustum.Near2.y) / sampleDepth + frustum.Near2.y;
+
+    float fSampleWidth = (float)centerX / windowsize.x;
+
+    float fSampleX = (fEndX - fStartX) * fSampleWidth + fStartX;
+    float fSampleY = (fEndY - fStartY) * fSampleWidth + fStartY;
+
+    Vector2 mapCoord = TextureMapPoint(fSampleX, fSampleY);
+    int mx = (int)mapCoord.x;
+    int my = (int)mapCoord.y;
+
+    DrawText(TextFormat("Position: (%d, %d)", mx, my),
+        (int)(position.x + windowsize.x - 200),
+        (int)(position.y + 10),
+        20,
+        YELLOW);
 }
 
 void Mode7::unload()
@@ -177,4 +224,7 @@ void Mode7::unload()
     UnloadTexture(texMap);
     UnloadImage(imgMap);
 }
+
+
+
 

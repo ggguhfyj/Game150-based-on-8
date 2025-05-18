@@ -51,6 +51,9 @@ public:
     static void Generate_Expressway1();
     static void Generate_Expressway2();
     static void Generate_Expressway3();
+    static void Generate_Expressway4();
+    static void Generate_Expressway5();
+    static void Generate_Expressway6();
     static inline std::vector<Position*> Expressway_List;
 
     

@@ -12,6 +12,10 @@ Updated:        March 23, 2025
 #include "../Engine/Engine.h"
 #include "States.h"
 #include "..\Game\Gam150.h"
+#include <iostream>
+#include <functional>
+#include <vector>
+#include <raylib.h>
 
 Gam150::Gam150()
 {
@@ -34,9 +38,16 @@ void Gam150::Draw() {
     TestMap::drawMap({ 50.0,300.0 }, 1);
     if (drawmode)Mode7::Draw();
 }       
-
-
-
+int currentExpresswayIndex = 1;
+int lastDrawnExpresswayIndex = 0;
+std::vector<std::function<void()>> expresswayGenerators = {
+      TestMap::Generate_Expressway1,
+      TestMap::Generate_Expressway2,
+      TestMap::Generate_Expressway3,
+      TestMap::Generate_Expressway4,
+      TestMap::Generate_Expressway5,
+      TestMap::Generate_Expressway6,
+};
 void Gam150::Update([[maybe_unused]] double dt) {
     Mode7::Update();
     
@@ -46,18 +57,17 @@ void Gam150::Update([[maybe_unused]] double dt) {
     {
         TestMap::drawnRoadSegments += 2;
     }
-    if (IsKeyPressed(KEY_ONE)) {
-        TestMap::Generate_Expressway1();
+    if (IsKeyPressed(KEY_TAB)) {
+        expresswayGenerators[currentExpresswayIndex]();
+        lastDrawnExpresswayIndex = currentExpresswayIndex;
+        currentExpresswayIndex = (currentExpresswayIndex + 1) % expresswayGenerators.size();
     }
-
-    if (IsKeyPressed(KEY_TWO)) {
-        TestMap::Generate_Expressway2();
+    if (lastDrawnExpresswayIndex == -1) {
+        DrawText("Expressway: none", 60, 100, 50, GRAY);
     }
-
-    if (IsKeyPressed(KEY_THREE)) {
-        TestMap::Generate_Expressway3();
+    else {
+        DrawText(TextFormat("Expressway: %d", lastDrawnExpresswayIndex + 1), 60, 150, 50, DARKBLUE);
     }
-
     if (IsKeyPressed(KEY_C)) {
         
     }

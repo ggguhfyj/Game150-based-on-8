@@ -312,6 +312,12 @@ void TestMap::Generate_roads(const Position& Player_position) // Pass by const r
     std::cout << "WARNING: Manual deletion required for all generated Position objects!" << std::endl;
 
 }
+
+
+
+
+
+
 void TestMap::drawMap(Vector2 startpoint, int zone)
 {
     zone; //for unref param
@@ -432,13 +438,13 @@ void TestMap::Generate_TrafficLights()
     Traffic_Light_List.clear();
     std::unordered_map<Position*, int> connectionCount;
 
-    // Road_List 기준으로 각 Position의 연결 수 계산
+    
     for (size_t i = 0; i + 1 < Road_List.size(); i += 2) {
         connectionCount[Road_List[i]]++;
         connectionCount[Road_List[i + 1]]++;
     }
 
-    // 연결 수가 3인 점들만 후보로 추가
+    
     std::vector<Position*> candidates;
     for (auto& [pos, count] : connectionCount) {
         if (count == 3) {
@@ -446,7 +452,7 @@ void TestMap::Generate_TrafficLights()
         }
     }
 
-    // 후보 섞고 최대 4개만 선택
+    
     unsigned seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(candidates.begin(), candidates.end(), std::default_random_engine(seed));
     int maxTrafficLights = std::min(4, static_cast<int>(candidates.size()));
@@ -464,7 +470,9 @@ void TestMap::Generate_Expressway1() {
         &Map[0][6]->at(3).position,
         &Map[0][7]->at(4).position,
         &Map[0][7]->at(5).position,
-        &Map[0][7]->at(6).position
+        &Map[0][7]->at(6).position,
+        &Map[0][8]->at(7).position,
+        &Map[0][8]->at(8).position
     };
 
     for (size_t i = 0; i < coords.size() - 1; ++i) {
@@ -477,7 +485,9 @@ void TestMap::Generate_Expressway2() {
     Expressway_List.clear();
 
     std::vector<Position*> coords = {
+        &Map[1][3]->at(3).position,
         &Map[1][4]->at(3).position,
+        &Map[1][5]->at(3).position,
         &Map[1][5]->at(2).position,
         &Map[1][6]->at(2).position,
         &Map[1][7]->at(2).position,
@@ -498,9 +508,78 @@ void TestMap::Generate_Expressway3() {
         &Map[2][7]->at(0).position,
         &Map[2][7]->at(1).position,
         &Map[2][8]->at(2).position,
-        &Map[1][7]->at(3).position,
+        &Map[2][8]->at(3).position,
+        &Map[2][7]->at(3).position,
+        &Map[2][7]->at(4).position,
         &Map[2][8]->at(5).position,
-        &Map[2][7]->at(6).position
+        &Map[2][8]->at(6).position,
+        &Map[2][7]->at(6).position,
+        &Map[2][6]->at(6).position
+    };
+
+    for (size_t i = 0; i < coords.size() - 1; ++i) {
+        Expressway_List.push_back(coords[i]);
+        Expressway_List.push_back(coords[i + 1]);
+    }
+}
+
+void TestMap::Generate_Expressway4() {
+    Expressway_List.clear();
+
+    std::vector<Position*> coords = {
+        &Map[3][1]->at(0).position,
+        &Map[3][2]->at(1).position,
+        &Map[3][3]->at(2).position,
+        &Map[3][4]->at(2).position,
+        &Map[3][5]->at(2).position,
+        &Map[3][6]->at(3).position,
+        &Map[3][7]->at(3).position,
+        &Map[3][7]->at(2).position,
+        &Map[3][8]->at(2).position,
+        &Map[3][9]->at(2).position,
+    };
+
+    for (size_t i = 0; i < coords.size() - 1; ++i) {
+        Expressway_List.push_back(coords[i]);
+        Expressway_List.push_back(coords[i + 1]);
+    }
+}
+
+void TestMap::Generate_Expressway5() {
+    Expressway_List.clear();
+
+    std::vector<Position*> coords = {
+        &Map[4][3]->at(0).position,
+        &Map[4][4]->at(1).position,
+        &Map[4][4]->at(2).position,
+        &Map[4][5]->at(3).position,
+        &Map[4][5]->at(4).position,
+        &Map[4][6]->at(5).position,
+        &Map[4][7]->at(6).position,
+        &Map[4][8]->at(6).position,
+        &Map[4][9]->at(7).position,
+    };
+
+    for (size_t i = 0; i < coords.size() - 1; ++i) {
+        Expressway_List.push_back(coords[i]);
+        Expressway_List.push_back(coords[i + 1]);
+    }
+}
+
+void TestMap::Generate_Expressway6() {
+    Expressway_List.clear();
+
+    std::vector<Position*> coords = {
+        &Map[5][7]->at(0).position,
+        &Map[5][7]->at(1).position,
+        &Map[5][8]->at(2).position,
+        &Map[5][8]->at(3).position,
+        &Map[5][8]->at(4).position,
+        &Map[5][8]->at(5).position,
+        &Map[5][7]->at(5).position,
+        &Map[5][6]->at(4).position,
+        &Map[5][5]->at(4).position,
+        &Map[5][5]->at(5).position,
     };
 
     for (size_t i = 0; i < coords.size() - 1; ++i) {

@@ -2,6 +2,30 @@
 
 //https://www.youtube.com/watch?v=0kVM6dJeWaY
 
+Vector2 Mode7::TextureMapPoint(float fx, float fy)
+{
+    float spacing = 50.0f;
+    Vector2 startpoint = { 1500, 1500 };
+
+    float sx = fx - startpoint.x;
+    float sy = fy - startpoint.y;
+
+    float x = (sx + sy) / (2.0f * spacing);
+    float y = (sx - sy) / (2.0f * spacing);
+
+    return { roundf(x), roundf(y) };
+}
+
+float Mode7::GetPlayerX()
+{
+    return fWorldX;
+}
+
+float Mode7::GetPlayerY()
+{
+    return fWorldY;
+}
+
 void Mode7::DrawMode7Line(int y)
 {
     float fSampleDepth = (float)y / (windowsize.y / 2.0f);
@@ -31,7 +55,7 @@ void Mode7::DrawMode7Line(int y)
         {
             DrawTexture(trafficlightsTex, x + (int)position.x, (int)position.y + (int)windowsize.y/2 + y, WHITE);
         }
-
+        fo
     }*/
 
     //DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint);
@@ -75,7 +99,8 @@ void Mode7::Load()
 
 void Mode7::Update()
 {
-   
+    player.Update(fSpeed, GetFrameTime());
+
     if (IsKeyDown(KEY_Q)) fNear += 0.5f * fSpeed * GetFrameTime();
 
     if (IsKeyDown(KEY_A)) fNear -= 0.5f * fSpeed * GetFrameTime();
@@ -94,12 +119,24 @@ void Mode7::Update()
     if (IsKeyDown(KEY_RIGHT)) {
         fWorldA += 1.0f * GetFrameTime();
         skyOffset += 1.0f * fSpeed * 1.5f * GetFrameTime();
+        if(player.fuel <= 0.0f && fSpeed <= 0.0f) {
+            fWorldA = 0;
+            skyOffset = 0;
+        }
     }
     if (IsKeyDown(KEY_LEFT)) {
         fWorldA -= 1.0f * GetFrameTime();
         skyOffset -= 1.0f * fSpeed * 1.5f * GetFrameTime();
+        if (player.fuel <= 0.0f && fSpeed <= 0.0f) {
+            fWorldA = 0;
+            skyOffset = 0;
+        }
     }
+    if (player.fuel <= 0.0f) {
+        fSpeed -=3;
+        if (fSpeed < 0) fSpeed = 0;
 
+    }
     if (IsKeyDown(KEY_UP)) {
         
         if (IsKeyDown(KEY_LEFT_SHIFT))
@@ -118,12 +155,19 @@ void Mode7::Update()
     }
 
     if (IsKeyDown(KEY_DOWN)) {
-        fWorldX -= cosf(fWorldA) * fSpeed * GetFrameTime();
-        fWorldY -= sinf(fWorldA) * fSpeed * GetFrameTime();
+       /* fWorldX -= cosf(fWorldA) * fSpeed * GetFrameTime();
+        fWorldY -= sinf(fWorldA) * fSpeed * GetFrameTime();*/
+
+        if (fSpeed > 0) {
+            fSpeed -= 5 * GetFrameTime(); // �극��ũ ����
+            if (fSpeed < 0) fSpeed = 0;
+        }
     }
 
     fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
     fWorldY += sinf(fWorldA) * fSpeed * GetFrameTime();
+    
+    player.Update(fSpeed, GetFrameTime());
 
     frustum.Far1.x = fWorldX + cosf(fWorldA - fFoVHalf) * fFar;
     frustum.Far1.y = fWorldY + sinf(fWorldA - fFoVHalf) * fFar;
@@ -143,7 +187,7 @@ void Mode7::Update()
 
 void Mode7::Draw()
 {
-    
+   
     RepositionWindow();
     ReSizeWindow();
 
@@ -151,17 +195,13 @@ void Mode7::Draw()
     Rectangle skyDest = { position.x, position.y, windowsize.x, windowsize.y/2 };
     DrawTexturePro(texSky, skySource, skyDest, { 0, 0 }, 0.0f, WHITE);
 
+    
+
     for (int y = 0; y < windowsize.y / 2; y++) {
         DrawMode7Line(y);
     }
 
-
-
-
-
-
-
-
+    Mode7::player.Update(Mode7::fSpeed, GetFrameTime());
     DrawRectangle((int)position.x, (int)position.y-tabheight, (int)windowsize.x, tabheight, GRAY);
     DrawRectangle((int)position.x+5, (int)position.y - tabheight + 5, (int)windowsize.x-10, tabheight-10, BLUE);
     DrawTexture(windowtabs, (int)position.x + 10, (int)position.y - tabheight +10, WHITE);
@@ -169,6 +209,44 @@ void Mode7::Draw()
     DrawFPS((int)position.x, (int)position.y + (int)windowsize.y / 2 - 20);
     DrawText("ARROWKEYS TO MOVE, \n Q,A,W,S to change camera settings", (int)position.x, (int)position.y , 25, GREEN);
     
+
+    for (int y = 0; y < windowsize.y / 2; y++) {
+        DrawMode7Line(y);
+    }
+
+    int centerX = (int)(windowsize.x / 2.0f);
+    int centerY = (int)(windowsize.y / 4.0f);
+
+    float sampleDepth = (float)centerY / (windowsize.y / 2.0f);
+
+    float fStartX = (frustum.Far1.x - frustum.Near1.x) / sampleDepth + frustum.Near1.x;
+    float fStartY = (frustum.Far1.y - frustum.Near1.y) / sampleDepth + frustum.Near1.y;
+    float fEndX = (frustum.Far2.x - frustum.Near2.x) / sampleDepth + frustum.Near2.x;
+    float fEndY = (frustum.Far2.y - frustum.Near2.y) / sampleDepth + frustum.Near2.y;
+
+    float fSampleWidth = (float)centerX / windowsize.x;
+
+    float fSampleX = (fEndX - fStartX) * fSampleWidth + fStartX;
+    float fSampleY = (fEndY - fStartY) * fSampleWidth + fStartY;
+
+    Vector2 mapCoord = TextureMapPoint(fSampleX, fSampleY);
+    int mx = (int)mapCoord.x;
+    int my = (int)mapCoord.y;
+
+    DrawText(TextFormat("Position: (%d, %d)", mx, my),
+        (int)(position.x + windowsize.x - 200),
+        (int)(position.y + 10),
+        20,
+        YELLOW);
+    DrawText(TextFormat("Position: (%.1f, %.1f)", fWorldX, fWorldY),
+        (int)(position.x + windowsize.x - 300),
+        (int)(position.y + 30),
+        20,
+        YELLOW);
+
+    
+    Vector2 fuelBarPos = { position.x + 20, position.y + windowsize.y - 40 };
+    player.DrawFuelBar(fuelBarPos);
 }
 
 void Mode7::unload()
@@ -177,4 +255,7 @@ void Mode7::unload()
     UnloadTexture(texMap);
     UnloadImage(imgMap);
 }
+
+
+
 

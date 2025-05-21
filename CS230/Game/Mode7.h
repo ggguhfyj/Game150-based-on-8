@@ -3,10 +3,12 @@
 #include <raymath.h>
 #include "..\Engine\Engine.h"
 #include "mapGen.h"
+#include "Player.h" 
 
 class Mode7 {
 
 private:
+	static inline Player player;
 	struct Frustum 
 	{
 		Vector2 Far1;
@@ -14,8 +16,8 @@ private:
 		Vector2 Near1;
 		Vector2 Near2;
 	};
-	static inline float fWorldX = 0.0f;
-	static inline float fWorldY = 0.0f;
+	static inline float fWorldX = 1900.0f;
+	static inline float fWorldY = 1500.0f;
 	static inline float fWorldA = 0.1f;
 	static inline float fNear = 0.005f;
 	static inline float fFar = 50.0f;
@@ -45,4 +47,8 @@ public:
 	static void Draw();
 	static void unload();
 
+	static Vector2 TextureMapPoint(float fx, float fy);
+
+	static float GetPlayerX();
+	static float GetPlayerY();
 };

@@ -48,6 +48,7 @@ std::vector<std::function<void()>> expresswayGenerators = {
       TestMap::Generate_Expressway5,
       TestMap::Generate_Expressway6,
 };
+
 void Gam150::Update([[maybe_unused]] double dt) {
     Mode7::Update();
     
@@ -68,6 +69,7 @@ void Gam150::Update([[maybe_unused]] double dt) {
     else {
         DrawText(TextFormat("Expressway: %d", lastDrawnExpresswayIndex + 1), 60, 150, 50, DARKBLUE);
     }
+
     if (IsKeyPressed(KEY_C)) {
         
     }

@@ -312,12 +312,6 @@ void TestMap::Generate_roads(const Position& Player_position) // Pass by const r
     std::cout << "WARNING: Manual deletion required for all generated Position objects!" << std::endl;
 
 }
-
-
-
-
-
-
 void TestMap::drawMap(Vector2 startpoint, int zone)
 {
     zone; //for unref param
@@ -374,6 +368,9 @@ void TestMap::drawMap(Vector2 startpoint, int zone)
     int drawPosX2 = static_cast<int>(startpoint.x + (Road_List.at(drawnRoadSegments + 1)->X_position + Road_List.at(drawnRoadSegments + 1)->Y_position) * 50.0);
     int drawPosY2 = static_cast<int>(startpoint.y + (Road_List.at(drawnRoadSegments + 1)->X_position - Road_List.at(drawnRoadSegments + 1)->Y_position) * 50.0);
     DrawText(TextFormat(" (%d, %d) to (%d, %d)", drawPosX, drawPosY, drawPosX2, drawPosY2), 60, 100, 50, BLACK);
+
+
+
 
 }
 void TestMap::CreateMapTexture(Vector2 startpoint, int zone)
@@ -433,18 +430,20 @@ void TestMap::CreateMapTexture(Vector2 startpoint, int zone)
     Image image = LoadImageFromTexture(target.texture);
     ExportImage(image, "CreatedMap.png");
 }
+
+
+
 void TestMap::Generate_TrafficLights()
 {
     Traffic_Light_List.clear();
     std::unordered_map<Position*, int> connectionCount;
 
-    
+
     for (size_t i = 0; i + 1 < Road_List.size(); i += 2) {
         connectionCount[Road_List[i]]++;
         connectionCount[Road_List[i + 1]]++;
     }
 
-    
     std::vector<Position*> candidates;
     for (auto& [pos, count] : connectionCount) {
         if (count == 3) {
@@ -452,7 +451,6 @@ void TestMap::Generate_TrafficLights()
         }
     }
 
-    
     unsigned seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(candidates.begin(), candidates.end(), std::default_random_engine(seed));
     int maxTrafficLights = std::min(4, static_cast<int>(candidates.size()));
@@ -460,6 +458,8 @@ void TestMap::Generate_TrafficLights()
         Traffic_Light_List.push_back(candidates[i]);
     }
 }
+
+
 void TestMap::Generate_Expressway1() {
     Expressway_List.clear();
 

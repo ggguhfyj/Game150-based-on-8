@@ -2,7 +2,7 @@
 
 void Player::Update(float speed, float deltaTime) {
     if (speed > 0.1f && fuel > 0.0f) {
-        fuel -= fuelBurnRate * deltaTime * (speed / 100.0f);  // �ӵ��� ����ؼ� ���� ����
+        fuel -= fuelBurnRate * deltaTime * (speed / 100.0f);  
         if (fuel < 0.0f) fuel = 0.0f;
     }
 }

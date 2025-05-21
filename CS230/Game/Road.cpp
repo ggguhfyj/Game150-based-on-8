@@ -30,9 +30,12 @@ void Road::Update([[maybe_unused]] double dt) {
 
     object_matrix = Math::TranslationMatrix(position) * Math::RotationMatrix(GetRotation()) * Math::ScaleMatrix(scale);
 }
-
 void Road::Draw(Math::TransformationMatrix camera_matrix) {
 
-    road.Draw(camera_matrix * Math::ScaleMatrix(scale));
+    road.Draw(camera_matrix);
+}
+void Road::DrawPerspective(Math::TransformationMatrix camera_matrix) {
+
+    road.DrawPerspective(camera_matrix);
 }
 

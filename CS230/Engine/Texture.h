@@ -33,6 +33,14 @@ namespace CS230 {
             Math::ivec2 frame_size,
             unsigned int color = 0xFFFFFFFF
         );
+        void DrawPerspective(
+            Math::TransformationMatrix display_matrix,
+            Math::ivec2 texel_position,
+            Math::ivec2 frame_size,
+            unsigned int color = 0xFFFFFFFF
+        );
+       
+
         Math::ivec2 GetSize() const;
         ~Texture();
 

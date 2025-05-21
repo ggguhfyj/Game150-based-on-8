@@ -2,16 +2,18 @@
 
 //https://www.youtube.com/watch?v=0kVM6dJeWaY
 
-void Mode7::DrawMode7Line(int y)
+void Mode7::DrawMode7Line(int y) //y doesnt skip
 {
-    float fSampleDepth = (float)y / (windowsize.y / 2.0f);
+    float fSampleDepth = (float) y / (windowsize.y / 2.0f);
 
     float fStartX = (frustum.Far1.x - frustum.Near1.x) / (fSampleDepth)+frustum.Near1.x;
     float fStartY = (frustum.Far1.y - frustum.Near1.y) / (fSampleDepth)+frustum.Near1.y;
     float fEndX = (frustum.Far2.x - frustum.Near2.x) / (fSampleDepth)+frustum.Near2.x;
     float fEndY = (frustum.Far2.y - frustum.Near2.y) / (fSampleDepth)+frustum.Near2.y;
+    
 
     for (int x = 0; x < windowsize.x; x++) {
+        
         float fSampleWidth = (float)x / windowsize.x;
         float fSampleX = (fEndX - fStartX) * fSampleWidth + fStartX;
         float fSampleY = (fEndY - fStartY) * fSampleWidth + fStartY;
@@ -20,21 +22,36 @@ void Mode7::DrawMode7Line(int y)
         int texY = ((int)fSampleY % texMap.height + texMap.height) % texMap.height;
 
         Color color = GetImageColor(imgMap, texX, texY);
-        DrawPixel(x + (int)position.x, (int)position.y + (int)windowsize.y / 2 + y, color);
+        
+        //DrawPixel(x + (int)position.x, (int)position.y + (int)windowsize.y / 2 + y, color);
+        DrawRectangle((int)position.x + x * blowup_scale, (int)position.y + blowup_scale * ((int)windowsize.y / 2 + y), blowup_scale, blowup_scale, color);
 
+        if (x == windowsize.x / 2 && y == windowsize.y / 2 -1)
+        {
+            DrawText(TextFormat("aprox center position %d %d", texX, texY ), 100, 300, 30, WHITE);
+
+        }
+
+
+
+        /*for (Vector2 tl : TestMap::trafficlight)
+        {
+            if ((int)tl.x == texX && (int)tl.y == texY)
+            {
+                DrawTexture(trafficlightsTex, (int)position.x + (x * blowup_scale), (int)position.y + (blowup_scale * ((int)windowsize.y / 2 + y) - 50), WHITE);
+            }
+        }
+        */
+        //if (trafficlight_set.contains(vec2{ texX,texY }))/ unordered map 
+        //{
+        //    DrawTexture(trafficlightsTex, (int)position.x + x * blowup_scale, (int)position.y + blowup_scale * ((int)windowsize.y / 2 + y) - 20, WHITE);
+        //}
         
         
     }
-  /*  for (Vector2 tl : TestMap::trafficlight)
-    {
-        if (tl.x == texX && tl.y == texY)
-        {
-            DrawTexture(trafficlightsTex, x + (int)position.x, (int)position.y + (int)windowsize.y/2 + y, WHITE);
-        }
+    
 
-    }*/
-
-    //DrawTextureNPatch(Texture2D texture, NPatchInfo nPatchInfo, Rectangle dest, Vector2 origin, float rotation, Color tint);
+    
 }
 
 void Mode7::RepositionWindow()
@@ -65,7 +82,7 @@ void Mode7::ReSizeWindow()
 
 void Mode7::Load()
 {
-    texSky = LoadTexture("Assets/sky1.png");
+    texSky = LoadTexture("Assets/Sky.png");
     texMap = LoadTexture("CreatedMap.png");
     windowtabs = LoadTexture("Assets/windowtabs.png");
     trafficlightsTex = LoadTexture("Assets/traffic-light.png");
@@ -93,11 +110,11 @@ void Mode7::Update()
 
     if (IsKeyDown(KEY_RIGHT)) {
         fWorldA += 1.0f * GetFrameTime();
-        skyOffset += 1.0f * fSpeed * 1.5f * GetFrameTime();
+        skyOffset += 1200.0f * GetFrameTime();
     }
     if (IsKeyDown(KEY_LEFT)) {
         fWorldA -= 1.0f * GetFrameTime();
-        skyOffset -= 1.0f * fSpeed * 1.5f * GetFrameTime();
+        skyOffset -= 1200.0f *GetFrameTime();
     }
 
     if (IsKeyDown(KEY_UP)) {
@@ -138,7 +155,9 @@ void Mode7::Update()
     frustum.Near2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fNear;
 
     skyOffset = (float)fmod(skyOffset, texSky.width);
-    
+
+
+
 }
 
 void Mode7::Draw()
@@ -148,27 +167,21 @@ void Mode7::Draw()
     ReSizeWindow();
 
     Rectangle skySource = { skyOffset, 0, (float)texSky.width, (float)texSky.height };
-    Rectangle skyDest = { position.x, position.y, windowsize.x, windowsize.y/2 };
+    Rectangle skyDest = { position.x, position.y, windowsize.x*blowup_scale , windowsize.y/2 * blowup_scale };
     DrawTexturePro(texSky, skySource, skyDest, { 0, 0 }, 0.0f, WHITE);
 
     for (int y = 0; y < windowsize.y / 2; y++) {
         DrawMode7Line(y);
     }
-
-
-
-
-
-
+    
 
 
     DrawRectangle((int)position.x, (int)position.y-tabheight, (int)windowsize.x, tabheight, GRAY);
     DrawRectangle((int)position.x+5, (int)position.y - tabheight + 5, (int)windowsize.x-10, tabheight-10, BLUE);
     DrawTexture(windowtabs, (int)position.x + 10, (int)position.y - tabheight +10, WHITE);
-    DrawLine((int)position.x, (int)position.y+(int)windowsize.y / 2, (int)position.x+(int)windowsize.x, (int)position.y + (int)windowsize.y / 2, BLUE);
     DrawFPS((int)position.x, (int)position.y + (int)windowsize.y / 2 - 20);
     DrawText("ARROWKEYS TO MOVE, \n Q,A,W,S to change camera settings", (int)position.x, (int)position.y , 25, GREEN);
-    
+   
 }
 
 void Mode7::unload()

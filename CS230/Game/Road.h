@@ -19,6 +19,7 @@ public:
 	Road(Math::vec2 position);
 	void Update(double dt);
 	void Draw(Math::TransformationMatrix camera_matrix);
+	void DrawPerspective(Math::TransformationMatrix camera_matrix);
 	
 	//void Reset();
 	

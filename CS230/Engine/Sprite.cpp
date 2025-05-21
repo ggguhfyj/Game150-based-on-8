@@ -142,7 +142,6 @@ namespace CS230 {
     }
     Math::ivec2 Sprite::GetFrameSize()
     {
-
         return frame_size;
     }
     void Sprite::PlayAnimation(int animation)
@@ -167,6 +166,11 @@ namespace CS230 {
     void CS230::Sprite::Draw(Math::TransformationMatrix display_matrix) {
         texture->Draw(display_matrix * Math::TranslationMatrix(-GetHotSpot(0)), GetFrameTexel(animations.at(current_animation)->CurrentFrame()), GetFrameSize());
     }
-   
+    void CS230::Sprite::DrawPerspective(Math::TransformationMatrix display_matrix) {
+        texture->DrawPerspective(display_matrix * Math::TranslationMatrix(Math::ivec2{ -Engine::GetWindow().GetSize().x/2,-Engine::GetWindow().GetSize().y/2 }), { 0,0 }, { Engine::GetWindow().GetSize().x,Engine::GetWindow().GetSize().y });
+
+    }
+
 
 }
+    

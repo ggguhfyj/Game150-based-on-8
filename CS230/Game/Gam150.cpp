@@ -31,7 +31,7 @@ void Gam150::Load() {
 
 void Gam150::Draw() {
     Engine::GetWindow().Clear(0x222222FF);
-    TestMap::drawMap({ 50.0,300.0 }, 1);
+    //TestMap::drawMap({ 50.0,300.0 }, 1);
     if (drawmode)Mode7::Draw();
 }       
 

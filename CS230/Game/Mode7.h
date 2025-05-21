@@ -38,7 +38,7 @@ private:
 	static void DrawMode7Line(int y);
 	static void RepositionWindow();
 	static void ReSizeWindow();
-	
+	static inline const int blowup_scale = 4;
 public:
 	static void Load();
 	static void Update();

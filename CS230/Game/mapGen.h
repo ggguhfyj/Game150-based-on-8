@@ -51,13 +51,19 @@ public:
     static void Generate_Expressway1();
     static void Generate_Expressway2();
     static void Generate_Expressway3();
+    static void Generate_Expressway4();
+    static void Generate_Expressway5();
+    static void Generate_Expressway6();
     static inline std::vector<Position*> Expressway_List;
-
+    
     
     static void drawMap(Vector2 startPoint, int zone);
     static void CreateMapTexture(Vector2 startpoint, int zone);
 
     static void Generate_TrafficLights();
+    static void Generate_RoadEvents(int gasCount, int moneyCount, int humanityCount);
+
     static inline std::vector<Position*> Traffic_Light_List = {};
+
 
 };

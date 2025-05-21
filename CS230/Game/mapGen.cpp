@@ -312,35 +312,25 @@ void TestMap::Generate_roads(const Position& Player_position) // Pass by const r
     std::cout << "WARNING: Manual deletion required for all generated Position objects!" << std::endl;
 
 }
+
+
+
+
+
 void TestMap::drawMap(Vector2 startpoint, int zone)
 {
     zone; //for unref param
-    // change so we dont have to draw this all the time. it gets annoying
-    
+    // change so we dont have to draw this all the time. it gets annoying 
+    for (int node = 0; node <= drawnRoadSegments; node += 2){
+            float drawPosX =   static_cast<float>(startpoint.x + (Road_List.at(node)->X_position + Road_List.at(node)->Y_position) * 50.0);
+            float  drawPosY =  static_cast<float>(startpoint.y + (Road_List.at(node)->X_position - Road_List.at(node)->Y_position) * 50.0);
+            float  drawPosX2 = static_cast<float>(startpoint.x + (Road_List.at(node + 1)->X_position + Road_List.at(node + 1)->Y_position) * 50.0);
+            float  drawPosY2 = static_cast<float>(startpoint.y + (Road_List.at(node + 1)->X_position - Road_List.at(node + 1)->Y_position) * 50.0);
 
-    for (std::vector<std::vector<Point>*> X : Map)
-    {
-        for (std::vector<Point>* Y : X)
-        {
-            for (int node = 0; node < Y->size(); node++)
-            {
-                int drawPosX = static_cast<int>(startpoint.x + (Y->at(node).position.X_position + Y->at(node).position.Y_position) * 50.0);
-                int drawPosY = static_cast<int>(startpoint.y + (Y->at(node).position.X_position - Y->at(node).position.Y_position) * 50.0);
-
-                DrawCircle(drawPosX, drawPosY, 10, WHITE);
-            }
-        }
+            DrawLineEx({ drawPosX, drawPosY }, { drawPosX2, drawPosY2 }, 6, RED);
     }
 
-    for (int node = 0; node <= drawnRoadSegments; node += 2)
-    {
-        float drawPosX =   static_cast<float>(startpoint.x + (Road_List.at(node)->X_position + Road_List.at(node)->Y_position) * 50.0);
-        float  drawPosY =  static_cast<float>(startpoint.y + (Road_List.at(node)->X_position - Road_List.at(node)->Y_position) * 50.0);
-        float  drawPosX2 = static_cast<float>(startpoint.x + (Road_List.at(node + 1)->X_position + Road_List.at(node + 1)->Y_position) * 50.0);
-        float  drawPosY2 = static_cast<float>(startpoint.y + (Road_List.at(node + 1)->X_position - Road_List.at(node + 1)->Y_position) * 50.0);
-
-        DrawLineEx({ drawPosX, drawPosY }, { drawPosX2, drawPosY2 }, 6, RED);
-    }
+    //draw hight way
     for (int i = 0; i + 1 < Expressway_List.size(); i += 2)
     {
         Vector2 start = {
@@ -354,11 +344,56 @@ void TestMap::drawMap(Vector2 startpoint, int zone)
 
         DrawLineEx(start, end, 4.0f, BLUE);
     }
-    for (Position* pos : Traffic_Light_List) {
-        int drawPosX = (int)(startpoint.x + (pos->X_position + pos->Y_position) * 50.0);
-        int drawPosY = (int)(startpoint.y + (pos->X_position - pos->Y_position) * 50.0);
-        DrawCircle(drawPosX, drawPosY, 10, GREEN);
+
+    //make node
+    for (std::vector<std::vector<Point>*> X : Map)
+    {
+        for (std::vector<Point>* Y : X)
+        {
+            for (int node = 0; node < Y->size(); node++)
+            {
+                int drawPosX = static_cast<int>(startpoint.x + (Y->at(node).position.X_position + Y->at(node).position.Y_position) * 50.0);
+                int drawPosY = static_cast<int>(startpoint.y + (Y->at(node).position.X_position - Y->at(node).position.Y_position) * 50.0);
+                DrawCircle(drawPosX, drawPosY, 10, WHITE);
+ 
+            }
+        }
     }
+
+    //make and draw Gas,Money, Humanity Poi 
+    for (std::vector<std::vector<Point>*> X : Map)
+        {
+            for (std::vector<Point>* Y : X)
+            {
+                for (int node = 0; node < Y->size(); node++)
+                {
+                    int drawPosX = static_cast<int>(startpoint.x + (Y->at(node).position.X_position + Y->at(node).position.Y_position) * 50.0);
+                    int drawPosY = static_cast<int>(startpoint.y + (Y->at(node).position.X_position - Y->at(node).position.Y_position) * 50.0);
+
+                    Color color = BLANK;
+                    switch (Y->at(node).Event) {
+                    case TestMap::Point::Gas: color = DARKGREEN; break;
+                    case TestMap::Point::Money: color = GOLD; break;
+                    case TestMap::Point::Humanity: color = PURPLE; break;
+                    default: continue;
+                    }
+
+                    DrawCircle(drawPosX, drawPosY, 10, color);
+                }
+            }
+        }
+
+    //Traffic_Light_List
+     for (Position* pos : Traffic_Light_List) {
+            int drawPosX = (int)(startpoint.x + (pos->X_position + pos->Y_position) * 50.0);
+            int drawPosY = (int)(startpoint.y + (pos->X_position - pos->Y_position) * 50.0);
+            DrawCircle(drawPosX, drawPosY, 10, GREEN);
+        }
+   
+
+   
+  
+    
 
     DrawText(TextFormat("roadlist size: %d", Road_List.size()), 60, 10, 10, BLACK);
     DrawText(TextFormat("drawn segments: %d", drawnRoadSegments), 60, 20, 20, BLACK);
@@ -368,6 +403,9 @@ void TestMap::drawMap(Vector2 startpoint, int zone)
     int drawPosX2 = static_cast<int>(startpoint.x + (Road_List.at(drawnRoadSegments + 1)->X_position + Road_List.at(drawnRoadSegments + 1)->Y_position) * 50.0);
     int drawPosY2 = static_cast<int>(startpoint.y + (Road_List.at(drawnRoadSegments + 1)->X_position - Road_List.at(drawnRoadSegments + 1)->Y_position) * 50.0);
     DrawText(TextFormat(" (%d, %d) to (%d, %d)", drawPosX, drawPosY, drawPosX2, drawPosY2), 60, 100, 50, BLACK);
+
+
+
 
 }
 void TestMap::CreateMapTexture(Vector2 startpoint, int zone)
@@ -386,7 +424,7 @@ void TestMap::CreateMapTexture(Vector2 startpoint, int zone)
             {
                 int drawPosX = static_cast<int>(startpoint.x + (Y->at(node).position.X_position + Y->at(node).position.Y_position) * 50.0);
                 int drawPosY = static_cast<int>(startpoint.y + (Y->at(node).position.X_position - Y->at(node).position.Y_position) * 50.0);
-
+                
                 DrawCircle(drawPosX*3, drawPosY*3, 100, RED);
                 trafficlight.push_back(Vector2{ (float)drawPosX*3,(float)drawPosY*3 });
 
@@ -416,17 +454,42 @@ void TestMap::CreateMapTexture(Vector2 startpoint, int zone)
 
         DrawLineEx({ start.x * 3,start.y * 3 }, { end.x*3,end.y*3 }, 20.0f, BLUE);
     }
+    for (std::vector<std::vector<Point>*> X : Map)
+    {
+        for (std::vector<Point>* Y : X)
+        {
+            for (int node = 0; node < Y->size(); node++)
+            {
+                int drawPosX = static_cast<int>(startpoint.x + (Y->at(node).position.X_position + Y->at(node).position.Y_position) * 50.0);
+                int drawPosY = static_cast<int>(startpoint.y + (Y->at(node).position.X_position - Y->at(node).position.Y_position) * 50.0);
+
+                Color color = BLANK;
+                switch (Y->at(node).Event) {
+                case TestMap::Point::Gas: color = DARKGREEN; break;
+                case TestMap::Point::Money: color = GOLD; break;
+                case TestMap::Point::Humanity: color = PURPLE; break;
+                default: continue;
+                }
+
+                DrawCircle(drawPosX * 3, drawPosY * 3, 10 * 3, color);
+            }
+        }
+    }
     for (Position* pos : Traffic_Light_List) {
         int drawPosX = (int)(startpoint.x + (pos->X_position + pos->Y_position) * 50.0);
         int drawPosY = (int)(startpoint.y + (pos->X_position - pos->Y_position) * 50.0);
         DrawCircle(drawPosX*3, drawPosY*3, 10*3, GREEN);
     }
 
+
     EndTextureMode();
 
     Image image = LoadImageFromTexture(target.texture);
     ExportImage(image, "CreatedMap.png");
 }
+
+
+
 void TestMap::Generate_TrafficLights()
 {
     Traffic_Light_List.clear();
@@ -451,7 +514,65 @@ void TestMap::Generate_TrafficLights()
     for (int i = 0; i < maxTrafficLights; ++i) {
         Traffic_Light_List.push_back(candidates[i]);
     }
+    
 }
+
+void TestMap::Generate_RoadEvents(int gasCount, int moneyCount, int humanityCount) {
+    // reset
+    for (int zone = 0; zone < 6; ++zone) {
+        for (auto& rowPtr : Map[zone]) {
+            for (Point& point : *rowPtr) {
+                point.Event = Point::nothing;
+            }
+        }
+    }
+
+    std::vector<Position*> candidates;
+
+    // Road_List NON TrafficLight position
+    for (Position* pos : Road_List) {
+        bool isTrafficLight = std::any_of(Traffic_Light_List.begin(), Traffic_Light_List.end(),
+            [&](Position* tl) {
+                return tl->X_position == pos->X_position &&
+                    tl->Y_position == pos->Y_position &&
+                    tl->zone == pos->zone;
+            });
+
+        if (!isTrafficLight) {
+            candidates.push_back(pos);
+        }
+    }
+
+    // Needed num
+    int totalNeeded = gasCount + moneyCount + humanityCount;
+    if ((int)candidates.size() < totalNeeded) {
+        std::cerr << "Not enough valid positions to assign all events.\n";
+        return;
+    }
+
+    //rand
+    unsigned seed = static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count());
+    std::shuffle(candidates.begin(), candidates.end(), std::default_random_engine(seed));
+
+    int assigned = 0;
+    auto assignEvent = [&](int count, Point::Events evType) {
+        for (int i = 0; i < count && assigned < (int)candidates.size(); ++i, ++assigned) {
+            Position* pos = candidates[assigned];
+            Point& point = Map[pos->zone][pos->X_position]->at(pos->Y_position);
+            point.Event = evType;
+        }
+        };
+
+    assignEvent(gasCount, Point::Gas);
+    assignEvent(moneyCount, Point::Money);
+    assignEvent(humanityCount, Point::Humanity);
+
+    std::cout << "Gas: " << gasCount << ", Money: " << moneyCount << ", Humanity: " << humanityCount << " events placed.\n";
+}
+
+
+
+
 void TestMap::Generate_Expressway1() {
     Expressway_List.clear();
 
@@ -462,7 +583,9 @@ void TestMap::Generate_Expressway1() {
         &Map[0][6]->at(3).position,
         &Map[0][7]->at(4).position,
         &Map[0][7]->at(5).position,
-        &Map[0][7]->at(6).position
+        &Map[0][7]->at(6).position,
+        &Map[0][8]->at(7).position,
+        &Map[0][8]->at(8).position
     };
 
     for (size_t i = 0; i < coords.size() - 1; ++i) {
@@ -475,7 +598,9 @@ void TestMap::Generate_Expressway2() {
     Expressway_List.clear();
 
     std::vector<Position*> coords = {
+        &Map[1][3]->at(3).position,
         &Map[1][4]->at(3).position,
+        &Map[1][5]->at(3).position,
         &Map[1][5]->at(2).position,
         &Map[1][6]->at(2).position,
         &Map[1][7]->at(2).position,
@@ -496,9 +621,78 @@ void TestMap::Generate_Expressway3() {
         &Map[2][7]->at(0).position,
         &Map[2][7]->at(1).position,
         &Map[2][8]->at(2).position,
-        &Map[1][7]->at(3).position,
+        &Map[2][8]->at(3).position,
+        &Map[2][7]->at(3).position,
+        &Map[2][7]->at(4).position,
         &Map[2][8]->at(5).position,
-        &Map[2][7]->at(6).position
+        &Map[2][8]->at(6).position,
+        &Map[2][7]->at(6).position,
+        &Map[2][6]->at(6).position
+    };
+
+    for (size_t i = 0; i < coords.size() - 1; ++i) {
+        Expressway_List.push_back(coords[i]);
+        Expressway_List.push_back(coords[i + 1]);
+    }
+}
+
+void TestMap::Generate_Expressway4() {
+    Expressway_List.clear();
+
+    std::vector<Position*> coords = {
+        &Map[3][1]->at(0).position,
+        &Map[3][2]->at(1).position,
+        &Map[3][3]->at(2).position,
+        &Map[3][4]->at(2).position,
+        &Map[3][5]->at(2).position,
+        &Map[3][6]->at(3).position,
+        &Map[3][7]->at(3).position,
+        &Map[3][7]->at(2).position,
+        &Map[3][8]->at(2).position,
+        &Map[3][9]->at(2).position,
+    };
+
+    for (size_t i = 0; i < coords.size() - 1; ++i) {
+        Expressway_List.push_back(coords[i]);
+        Expressway_List.push_back(coords[i + 1]);
+    }
+}
+
+void TestMap::Generate_Expressway5() {
+    Expressway_List.clear();
+
+    std::vector<Position*> coords = {
+        &Map[4][3]->at(0).position,
+        &Map[4][4]->at(1).position,
+        &Map[4][4]->at(2).position,
+        &Map[4][5]->at(3).position,
+        &Map[4][5]->at(4).position,
+        &Map[4][6]->at(5).position,
+        &Map[4][7]->at(6).position,
+        &Map[4][8]->at(6).position,
+        &Map[4][9]->at(7).position,
+    };
+
+    for (size_t i = 0; i < coords.size() - 1; ++i) {
+        Expressway_List.push_back(coords[i]);
+        Expressway_List.push_back(coords[i + 1]);
+    }
+}
+
+void TestMap::Generate_Expressway6() {
+    Expressway_List.clear();
+
+    std::vector<Position*> coords = {
+        &Map[5][7]->at(0).position,
+        &Map[5][7]->at(1).position,
+        &Map[5][8]->at(2).position,
+        &Map[5][8]->at(3).position,
+        &Map[5][8]->at(4).position,
+        &Map[5][8]->at(5).position,
+        &Map[5][7]->at(5).position,
+        &Map[5][6]->at(4).position,
+        &Map[5][5]->at(4).position,
+        &Map[5][5]->at(5).position,
     };
 
     for (size_t i = 0; i < coords.size() - 1; ++i) {

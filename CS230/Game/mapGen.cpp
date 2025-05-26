@@ -308,6 +308,21 @@ void TestMap::Generate_roads(const Position& Player_position) // Pass by const r
         std::cout << "  (" << Road_List.at(i + 1)->X_position << "," << Road_List.at(i + 1)->Y_position << ")  ";
         std::cout << std::endl;
     }
+    int randomnum = 2;
+
+    switch (randomnum) {
+    case 1:
+        Generate_Expressway1();
+        break;
+    case 2:
+        Generate_Expressway2();
+        break;
+    case 3:
+        Generate_Expressway3();
+        break;
+    default:
+        Generate_Expressway1();
+    }
 
     std::cout << "WARNING: Manual deletion required for all generated Position objects!" << std::endl;
 
@@ -421,7 +436,11 @@ void TestMap::CreateMapTexture(Vector2 startpoint, int zone)
         int drawPosY = (int)(startpoint.y + (pos->X_position - pos->Y_position) * 50.0);
         DrawCircle(drawPosX*3, drawPosY*3, 10*3, GREEN);
     }
-
+    for (Position* pos : Traffic_Light_List) {
+        int drawPosX = (int)(startpoint.x + (pos->X_position + pos->Y_position) * 50.0);
+        int drawPosY = (int)(startpoint.y + (pos->X_position - pos->Y_position) * 50.0);
+        DrawCircle(drawPosX, drawPosY, 10, GREEN);
+    }
     EndTextureMode();
 
     Image image = LoadImageFromTexture(target.texture);

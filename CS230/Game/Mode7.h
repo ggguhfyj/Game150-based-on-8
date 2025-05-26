@@ -16,33 +16,41 @@ private:
 	};
 	static inline float fWorldX = 0.0f;
 	static inline float fWorldY = 0.0f;
-	static inline float fWorldA = 0.1f;
-	static inline float fNear = 0.005f;
-	static inline float fFar = 50.0f;
+	static inline float fWorldA = 0.0f;
+	static inline float fNear = -450;
+	static inline float fFar = -20;
 	static inline float fFoVHalf = PI / 4.0f;
-	static inline float fSpeed = 0.0f;
+	static inline float fSpeed = 200.0f;
 	static inline float fMaxSpeed = 300.0f;
 	static inline float fStartSpeed = 0.0f;
 	static inline float skyOffset = 0.0f;
 
-	static inline Vector2 windowsize = { 700,500 };
+	static inline Vector2 windowsize = { 300,300 };
+	static inline Vector2 position = { 0,0 };
 
-	static inline Vector2 position = { 100,100 };
-	static inline int tabheight = 40;
 	static inline Texture2D texSky;
 	static inline Texture2D texMap;
 	static inline Texture2D windowtabs;
 	static inline Texture2D trafficlightsTex;
-	static inline Image imgMap;
-	static inline Frustum frustum;
-	static void DrawMode7Line(int y);
-	static void RepositionWindow();
-	static void ReSizeWindow();
+	static inline Texture2D player[7];
+
 	
+	static inline Image imgMap;
+
+	static inline Frustum frustum;
+
+	static void DrawMode7Line(int y);
+
+	static inline const int blowup_scale = 4;
+
+	static inline int playersprites = 3;
+
+	static inline bool right;
+	static inline int counter = 0;
 public:
 	static void Load();
 	static void Update();
 	static void Draw();
 	static void unload();
-
+	static void DrawPlayer();
 };

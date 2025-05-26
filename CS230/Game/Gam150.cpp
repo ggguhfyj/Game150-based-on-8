@@ -19,20 +19,22 @@ Gam150::Gam150()
 }
 
 void Gam150::Load() {
-    TestMap::Initialize_Map();
-    TestMap::TestDrawMap();
-    TestMap::TestDrawMap2();
-    TestMap::Generate_roads({ {2},{5},{0} });
-    TestMap::Generate_TrafficLights();
-    TestMap::CreateMapTexture({ 50.0,300.0 }, 1);
+    //TestMap::Initialize_Map();
+    //TestMap::TestDrawMap();
+    //TestMap::TestDrawMap2();
+    //TestMap::Generate_roads({ {2},{5},{0} });
+    //TestMap::Generate_TrafficLights();
+    //TestMap::CreateMapTexture({ 50.0,300.0 }, 1);
+
+
     Mode7::Load();
-    
 }
 
 void Gam150::Draw() {
     Engine::GetWindow().Clear(0x222222FF);
-    TestMap::drawMap({ 50.0,300.0 }, 1);
-    if (drawmode)Mode7::Draw();
+    //TestMap::drawMap({ 50.0,300.0 }, 1);
+    Mode7::Draw();
+    
 }       
 
 

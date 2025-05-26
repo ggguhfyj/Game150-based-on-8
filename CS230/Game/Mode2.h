@@ -16,6 +16,7 @@ Created:    March 15, 2025
 #include "..\Engine\GameObjectManager.h"
 #include "..\Game\Road.h"
 #include "..\Engine\Camera.h"
+#include "..\Engine\Window.h"
 
 class Mode2 : public CS230::GameState {
 public:

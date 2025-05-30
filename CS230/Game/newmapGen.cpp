@@ -8,7 +8,7 @@ void newMapGen::LoadTextures()
 	shadow_for_pole_tex  = LoadTexture("Assets/MapGen/tree1shadow.png");
 
 
-	snow_texture = LoadTexture("Assets/snow_texture.png");
+	snow_texture = LoadTexture("Assets/MapGen/snow_texture.png");
 }
 
 void newMapGen::generatesnowTexture()

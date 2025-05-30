@@ -15,24 +15,17 @@ Updated:        March 23, 2025
 
 Gam150::Gam150()
 {
- 
+    
 }
 
 void Gam150::Load() {
-    //TestMap::Initialize_Map();
-    //TestMap::TestDrawMap();
-    //TestMap::TestDrawMap2();
-    //TestMap::Generate_roads({ {2},{5},{0} });
-    //TestMap::Generate_TrafficLights();
-    //TestMap::CreateMapTexture({ 50.0,300.0 }, 1);
-
-
+    newMapGen::LoadTextures();
+    newMapGen::generatesnowTexture();
     Mode7::Load();
 }
 
 void Gam150::Draw() {
     Engine::GetWindow().Clear(0x222222FF);
-    //TestMap::drawMap({ 50.0,300.0 }, 1);
     Mode7::Draw();
     
 }       
@@ -48,21 +41,7 @@ void Gam150::Update([[maybe_unused]] double dt) {
     {
         TestMap::drawnRoadSegments += 2;
     }
-    if (IsKeyPressed(KEY_ONE)) {
-        TestMap::Generate_Expressway1();
-    }
 
-    if (IsKeyPressed(KEY_TWO)) {
-        TestMap::Generate_Expressway2();
-    }
-
-    if (IsKeyPressed(KEY_THREE)) {
-        TestMap::Generate_Expressway3();
-    }
-
-    if (IsKeyPressed(KEY_C)) {
-        
-    }
 
 }
 

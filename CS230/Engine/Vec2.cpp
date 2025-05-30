@@ -12,14 +12,14 @@ Updated:    March 22, 2025
 #include <iostream>
 #include "Vec2.h"
 
-bool Math::vec2::operator==(const vec2& v) {
+bool Math::vec2::operator==(const vec2& v) const{
     return (v.x == x && v.y == y);
 }
 
-bool Math::vec2::operator!=(const vec2& v) {
+bool Math::vec2::operator!=(const vec2& v) const{
     return (v.x != x || v.y != y);
 }
-Math::vec2 Math::vec2::operator+(const vec2& v) {
+Math::vec2 Math::vec2::operator+(const vec2& v) const{
     return { x + v.x, y + v.y };
 }
 
@@ -28,7 +28,7 @@ Math::vec2& Math::vec2::operator+=(const vec2& v) {
     y += v.y;
     return *this;
 }
-Math::vec2 Math::vec2::operator-(const vec2& v) {
+Math::vec2 Math::vec2::operator-(const vec2& v)const {
     return { x - v.x, y - v.y };
 }
 
@@ -37,7 +37,7 @@ Math::vec2& Math::vec2::operator-=(const vec2& v) {
     y -= v.y;
     return *this;
 }
-Math::vec2 Math::vec2::operator*(double scale) {
+Math::vec2 Math::vec2::operator*(double scale)const {
     return { x * scale, y * scale };
 }
 
@@ -46,7 +46,7 @@ Math::vec2& Math::vec2::operator*=(double scale) {
     y = y * scale;
     return *this;
 }
-Math::vec2 Math::vec2::operator/(double divisor) {
+Math::vec2 Math::vec2::operator/(double divisor)const {
     return { x / divisor, y / divisor };
 }
 
@@ -55,20 +55,20 @@ Math::vec2& Math::vec2::operator/=(double divisor) {
     y = y / divisor;
     return *this;
 }
-Math::vec2 Math::operator*(double scale, const vec2& v) {
+Math::vec2 Math::operator*(double scale, const vec2& v){
     return { v.x * scale, v.y * scale };
 }
 
 /*********************************************/
-bool Math::ivec2::operator==(const ivec2& v) {
+bool Math::ivec2::operator==(const ivec2& v)const {
     return { x == v.x && y == v.y };
 }
 
-bool Math::ivec2::operator!=(const ivec2& v) {
+bool Math::ivec2::operator!=(const ivec2& v)const {
     return { x != v.x || y != v.y };
 }
 
-Math::ivec2 Math::ivec2::operator+(const ivec2& v) {
+Math::ivec2 Math::ivec2::operator+(const ivec2& v)const {
     return { x + v.x, y + v.y };
 }
 
@@ -78,7 +78,7 @@ Math::ivec2& Math::ivec2::operator+=(const ivec2& v) {
     return *this;
 }
 
-Math::ivec2 Math::ivec2::operator-(const ivec2& v) {
+Math::ivec2 Math::ivec2::operator-(const ivec2& v)const {
     return { x - v.x, y - v.y };
 }
 
@@ -88,7 +88,7 @@ Math::ivec2& Math::ivec2::operator-=(const ivec2& v) {
     return *this;
 }
 
-Math::ivec2 Math::ivec2::operator*(int scale) {
+Math::ivec2 Math::ivec2::operator*(int scale)const {
     return { x * scale, y * scale };
 }
 
@@ -98,7 +98,7 @@ Math::ivec2& Math::ivec2::operator*=(int scale) {
     return *this;
 }
 
-Math::ivec2 Math::ivec2::operator/(int divisor) {
+Math::ivec2 Math::ivec2::operator/(int divisor)const {
     return { x / divisor, y / divisor };
 }
 
@@ -108,11 +108,11 @@ Math::ivec2& Math::ivec2::operator/=(int divisor) {
     return *this;
 }
 
-Math::vec2 Math::ivec2::operator*(double scale) {
+Math::vec2 Math::ivec2::operator*(double scale) const{
     return { x * scale, y * scale };
 }
 
-Math::vec2 Math::ivec2::operator/(double divisor) {
+Math::vec2 Math::ivec2::operator/(double divisor)const {
     return { x / divisor, y / divisor };
 }
 

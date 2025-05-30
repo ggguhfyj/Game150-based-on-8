@@ -1,7 +1,24 @@
 #include "Mode7.h"
-
+#include <cmath>
 //https://www.youtube.com/watch?v=0kVM6dJeWaY
 
+
+
+
+Color Mode7::DrawFog(Color color)
+{
+    
+    
+    A+= 1;
+    
+    
+    
+    Color fog = { (unsigned char)(BASE + R),(unsigned char)(BASE + G),(unsigned char)(BASE + B),(unsigned char)(BASE + A) };
+
+    Color fogcolor = ColorTint(color, fog);
+        
+    return fogcolor;
+}
 void Mode7::DrawMode7Line(int y) //y doesnt skip
 {
     float fSampleDepth = (float) y / (windowsize.y / 2.0f); 
@@ -20,71 +37,141 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
         int texX = ((int)fSampleX % texMap.width + texMap.width) % texMap.width;
         int texY = ((int)fSampleY % texMap.height + texMap.height) % texMap.height;
         Color color = GetImageColor(imgMap, texX, texY);
-        DrawRectangle((int)position.x + x * blowup_scale, (int)position.y + blowup_scale * ((int)windowsize.y / 2 + y), blowup_scale, blowup_scale, color);
-        /*for (Vector2 tl : TestMap::trafficlight)
-        {
-            if ((int)tl.x == texX && (int)tl.y == texY)
-            {
-                DrawTexture(trafficlightsTex, (int)position.x + (x * blowup_scale), (int)position.y + (blowup_scale * ((int)windowsize.y / 2 + y) - 50), WHITE);
-            }
-        }
-        */
-        //if (trafficlight_set.contains(vec2{ texX,texY }))/ unordered map 
-        //{
-        //    DrawTexture(trafficlightsTex, (int)position.x + x * blowup_scale, (int)position.y + blowup_scale * ((int)windowsize.y / 2 + y) - 20, WHITE);
-        //}
         
-        
-    }
-    
+        Color fogcolor = color;
 
-    
+        //DrawRectangle((int)position.x + x * blowup_scale, (int)position.y + blowup_scale * ((int)windowsize.y / 2 + y), blowup_scale, blowup_scale, Mode7::DrawFog(color));
+
+        DrawRectangle((int)position.x + x * blowup_scale, (int)position.y + blowup_scale * ((int)windowsize.y / 2 + y), blowup_scale, blowup_scale, color);
+
+        for (auto it : newMapGen::mapsprites)
+        {
+            if (!it.second.is_drawn )
+            {
+                double dx = it.first.x - (double)texX;
+                double dy = it.first.y - (double)texY;
+                
+                
+
+                if (std::hypot(dx, dy) < 35)
+                {
+                    
+                    //DrawTexture(trafficlightsTex, ((int)position.x + x * blowup_scale) - trafficlightsTex.width / 2, ((int)position.y + blowup_scale * ((int)windowsize.y / 2 + y)) - trafficlightsTex.height, WHITE);
+                    float scale = 1;
+
+                    DrawTextureEx(trafficlightsTex, { (x * blowup_scale) - ((trafficlightsTex.width / 2) / scale), (blowup_scale * (windowsize.y / 2 + y) ) - (trafficlightsTex.height / scale) },
+                        0,
+                        scale
+                        ,WHITE);
+                    it.second.is_drawn = true;
+                    
+                }
+            }
+
+        }
+    }
 }
+
 void Mode7::Load()
 {
     texSky = LoadTexture("Assets/Sky.png");
 
-    texMap = LoadTexture("Assets/snow texture.png");
+    texMap = LoadTexture("CreatedMap.png");
     windowtabs = LoadTexture("Assets/windowtabs.png");
-    trafficlightsTex = LoadTexture("Assets/traffic-light.png");
+    trafficlightsTex = LoadTexture("Assets/tree.png");
 
     player[0] = LoadTexture("Assets/Player/PlayerLeft-1.png");
     player[1] = LoadTexture("Assets/Player/PlayerLeft-2.png");
     player[2] = LoadTexture("Assets/Player/PlayerLeft-3.png");
 
+
     player[3] = LoadTexture("Assets/Player/PlayerRight-1.png");
     player[4] = LoadTexture("Assets/Player/PlayerRight-2.png");
     player[5] = LoadTexture("Assets/Player/PlayerRight-3.png");
+
+    BWplayer[0] = LoadTexture("Assets/Player/BW/1.png");
+    BWplayer[1] = LoadTexture("Assets/Player/BW/2.png");
+    BWplayer[2] = LoadTexture("Assets/Player/BW/3.png");
+    BWplayer[3] = LoadTexture("Assets/Player/BW/4.png");
+    BWplayer[4] = LoadTexture("Assets/Player/BW/5.png");
+    BWplayer[5] = LoadTexture("Assets/Player/BW/6.png");
+
+    VPplayer[0] = LoadTexture("Assets/Player/vaporwave/scanlines/1.png");
+    VPplayer[1] = LoadTexture("Assets/Player/vaporwave/scanlines/2.png");
+    VPplayer[2] = LoadTexture("Assets/Player/vaporwave/scanlines/3.png");
+    VPplayer[3] = LoadTexture("Assets/Player/vaporwave/scanlines/4.png");
+    VPplayer[4] = LoadTexture("Assets/Player/vaporwave/scanlines/5.png");
+    VPplayer[5] = LoadTexture("Assets/Player/vaporwave/scanlines/6.png");
     imgMap = LoadImageFromTexture(texMap);
+
+    fPlayerScreenX = (float)Engine::GetWindow().GetSize().x / 2;
 }
 void Mode7::Update()
 {
-    if (IsKeyDown(KEY_Q)) fNear +=10 * GetFrameTime();
+    if (IsKeyDown(KEY_Q)) fNear += 10 * GetFrameTime();
 
-    if (IsKeyDown(KEY_A)) fNear -= 10* GetFrameTime();
+    if (IsKeyDown(KEY_A)) fNear -= 10 * GetFrameTime();
 
-    if (IsKeyDown(KEY_W)) fFar += 10* GetFrameTime();       
+    if (IsKeyDown(KEY_W)) fFar += 10 * GetFrameTime();
 
-    if (IsKeyDown(KEY_S)) fFar -= 10* GetFrameTime();
+    if (IsKeyDown(KEY_S)) fFar -= 10 * GetFrameTime();
 
     if (IsKeyDown(KEY_Z)) fFoVHalf += 0.1f * GetFrameTime();
 
     if (IsKeyDown(KEY_X)) fFoVHalf -= 0.1f * GetFrameTime();
 
+  
     if (IsKeyDown(KEY_RIGHT)) {
+
         right = true;
+        
     }
-    if (IsKeyDown(KEY_LEFT)) {
+    else if (IsKeyDown(KEY_LEFT)) {
         right = false;
     }
-    if (right) {
-        fWorldA += 2.0f * GetFrameTime();
-        skyOffset += 1200.0f * GetFrameTime();
-    }
     else {
-        fWorldA -= 2.0f * GetFrameTime();
-        skyOffset -= 1200.0f * GetFrameTime();
+        if (fSpeed < 600) {
+            fSpeed += 10;
+        }
+        if (fRotationSpeed > 0.0f) {
+            fRotationSpeed -= fRotationDamping * GetFrameTime();
+            if (fRotationSpeed < 0.0f)
+                fRotationSpeed = 0.0f;
+        }
+        else if (fRotationSpeed < 0.0f) {
+            fRotationSpeed += fRotationDamping * GetFrameTime();
+            if (fRotationSpeed > 0.0f)
+                fRotationSpeed = 0.0f;
+        }
     }
+    if (right)
+    {
+        if (fSpeed < 300) {
+            fSpeed = 300;
+        }
+        fRotationSpeed += fRotationAccel * GetFrameTime();
+        fSpeed = fSpeed - abs(fRotationSpeed);
+        if (fRotationSpeed > fMaxRotationSpeed)
+            fRotationSpeed = fMaxRotationSpeed;
+
+    }
+    else
+    {
+        if (fSpeed < 300) {
+            fSpeed = 300;
+        }
+
+        fRotationSpeed -= fRotationAccel * GetFrameTime();
+        fSpeed = fSpeed - abs(fRotationSpeed);
+
+        if (fRotationSpeed < -fMaxRotationSpeed)
+            fRotationSpeed = -fMaxRotationSpeed;
+
+    }
+    
+    
+    fWorldA += fRotationSpeed * GetFrameTime();
+    skyOffset += 400.0f * fRotationSpeed * GetFrameTime();
 
     if (IsKeyDown(KEY_UP)) {
         fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
@@ -117,21 +204,25 @@ void Mode7::Draw()
 {
     Rectangle skySource = { skyOffset, 0, (float)texSky.width, (float)texSky.height };
     Rectangle skyDest = { position.x, position.y, windowsize.x*blowup_scale , windowsize.y/2 * blowup_scale };
+    
     DrawTexturePro(texSky, skySource, skyDest, { 0, 0 }, 0.0f, WHITE);
-
     for (int y = 0; y < windowsize.y / 2; y++) {
         DrawMode7Line(y);
     }
-
+    //DrawTexturePro(texSky, skySource, skyDest, { 0, 0 }, 0.0f, WHITE);
     DrawPlayer();
 
 
-    //DrawText(TextFormat("Position: (%.1f, %.1f)", fWorldX, fWorldY),
-    //    (int)(position.x + windowsize.x - 300),
-    //    (int)(position.y + 30),
-    //    20,
-    //    YELLOW);
-
+    DrawText(TextFormat("Speed: %.1f",fSpeed),100,100,
+        20,
+        YELLOW);
+    DrawText(TextFormat("fov: %.1f", fFoVHalf), 100, 200,
+        20,
+        YELLOW);
+    DrawText(TextFormat("mousepos: %.1f, %.1f",GetMousePosition().x , GetMousePosition().y), 100, 300,
+        20,
+        YELLOW);
+    DrawFPS(500, 100);
 }
 void Mode7::unload()
 {
@@ -146,7 +237,7 @@ void Mode7::DrawPlayer()
 
     if (right)
     {
-        if (playersprites > 0 && counter >2)
+        if (playersprites > 0 && counter >3)
         {
             counter = 0;
             playersprites--;
@@ -154,12 +245,17 @@ void Mode7::DrawPlayer()
     }
     else 
     {
-        if (playersprites < 5 && counter > 2)
+        if (playersprites < 5 && counter > 3)
         {
             counter = 0;
             playersprites++;
         }
     }
-    DrawTexture(player[playersprites], (int)(position.x+windowsize.x+50 ), (int)(position.y+windowsize.y*2 + 190), WHITE);
+    float scale = 1;
+    DrawTextureEx(VPplayer[playersprites], { (float)Engine::GetWindow().GetSize().x / 2 - ((VPplayer[playersprites].width / 2) / scale),
+        ((float)Engine::GetWindow().GetSize().y / 5 * 2) + (VPplayer[playersprites].height / 2) / scale },
+        0, 
+        scale,
+        WHITE);
 }
 

@@ -32,6 +32,19 @@ private:
 	static inline float fStartSpeed = 0.0f;
 	static inline float skyOffset = 0.0f;
 
+
+
+	static inline float playerXOffset = 0.0f;
+	static inline float playerXspeed = 0.0f;
+	static inline float playerAccel = 1000.0f;
+	static inline float playerMaxXOffsetSpeed = 300;
+	static inline float playerFriction = 900.0f;
+	static inline float leftWall = -300.0f;
+	static inline float rightWall = 300.0f;
+	static inline float wallBounceRotation = 0.4f;
+	/*static inline float slideTargetX = 0.0f;
+	static inline float slideSpeed = 100.0f;*/
+
 	static inline Vector2 windowsize = { 300,200 };
 	static inline Vector2 position = { 0,0 };
 

@@ -120,83 +120,144 @@ void Mode7::Update()
 
     if (IsKeyDown(KEY_X)) fFoVHalf -= 0.1f * GetFrameTime();
 
-  
-    if (IsKeyDown(KEY_RIGHT)) {
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
+        if (IsKeyDown(KEY_RIGHT)) {
 
-        right = true;
+            right = true;
+            playerXspeed += playerAccel * GetFrameTime();
+
+        }
+        else if (IsKeyDown(KEY_LEFT)) {
+            right = false;
+            playerXspeed -= playerAccel * GetFrameTime();
+        }
+        else {
+
+            if (playerXspeed > 0.0f) {
+                playerXspeed -= playerFriction * GetFrameTime();
+                if (playerXspeed < 0.0f) playerXspeed = 0.0f;
+            }
+            else if (playerXspeed < 0.0f) {
+                playerXspeed += playerFriction * GetFrameTime();
+                if (playerXspeed > 0.0f) playerXspeed = 0.0f;
+            }
+        }
+        
+        if (right == true)
+        {
+
+
+            /*if (fSpeed < 300) {
+                fSpeed = 300;
+            }
+
+            fRotationSpeed += fRotationAccel * GetFrameTime();
+            fSpeed = fSpeed - abs(fRotationSpeed);
+
+            if (fRotationSpeed > fMaxRotationSpeed) {
+                fRotationSpeed = fMaxRotationSpeed;
+            }*/
+
+        }
+        if (right == false)
+        {
+
+
+
+
+            /* if (fSpeed < 300) {
+                 fSpeed = 300;
+             }
+
+             fRotationSpeed -= fRotationAccel * GetFrameTime();
+             fSpeed = fSpeed - abs(fRotationSpeed);
+
+             if (fRotationSpeed < -fMaxRotationSpeed) {
+                 fRotationSpeed = -fMaxRotationSpeed;
+             }*/
+
+        }
         
     }
-    else if (IsKeyDown(KEY_LEFT)) {
-        right = false;
-    }
-    else {
-        if (fSpeed < 600) {
-            fSpeed += 10;
-        }
-        if (fRotationSpeed > 0.0f) {
-            fRotationSpeed -= fRotationDamping * GetFrameTime();
-            if (fRotationSpeed < 0.0f)
-                fRotationSpeed = 0.0f;
-        }
-        else if (fRotationSpeed < 0.0f) {
-            fRotationSpeed += fRotationDamping * GetFrameTime();
-            if (fRotationSpeed > 0.0f)
-                fRotationSpeed = 0.0f;
-        }
-    }
-    if (right)
-    {
-        if (fSpeed < 300) {
-            fSpeed = 300;
-        }
-        fRotationSpeed += fRotationAccel * GetFrameTime();
-        fSpeed = fSpeed - abs(fRotationSpeed);
-        if (fRotationSpeed > fMaxRotationSpeed)
-            fRotationSpeed = fMaxRotationSpeed;
+    playerXOffset += playerXspeed * GetFrameTime();
+    if (playerXOffset <= leftWall || playerXOffset >= rightWall) {
+        if (playerXOffset <= leftWall) {
+            playerXOffset = leftWall;
+            playerXspeed = 0;
+            if (fSpeed < 300) {
+                fSpeed = 300;
+            }
 
-    }
-    else
-    {
-        if (fSpeed < 300) {
-            fSpeed = 300;
+            fRotationSpeed += fRotationAccel * GetFrameTime();
+            fSpeed = fSpeed - abs(fRotationSpeed);
+
+            if (fRotationSpeed > fMaxRotationSpeed) {
+                fRotationSpeed = fMaxRotationSpeed;
+            }
+
+            fWorldA -= wallBounceRotation * GetFrameTime();
+
         }
 
-        fRotationSpeed -= fRotationAccel * GetFrameTime();
-        fSpeed = fSpeed - abs(fRotationSpeed);
+        // 우측 벽 충돌
+        if (playerXOffset >= rightWall) {
+            playerXOffset = rightWall;
+            playerXspeed = 0;
 
-        if (fRotationSpeed < -fMaxRotationSpeed)
-            fRotationSpeed = -fMaxRotationSpeed;
+            if (fSpeed < 300) {
+                fSpeed = 300;
+            }
 
+            fRotationSpeed -= fRotationAccel * GetFrameTime();
+            fSpeed = fSpeed - abs(fRotationSpeed);
+
+            if (fRotationSpeed < -fMaxRotationSpeed) {
+                fRotationSpeed = -fMaxRotationSpeed;
+            }
+            fWorldA += wallBounceRotation * GetFrameTime();
+        }
+        
+        /*fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
+        fWorldY += sinf(fWorldA) * fSpeed * GetFrameTime();*/
     }
     
-    
-    fWorldA += fRotationSpeed * GetFrameTime();
+
+   // fWorldA += fRotationSpeed * GetFrameTime();
     skyOffset += 400.0f * fRotationSpeed * GetFrameTime();
 
-    if (IsKeyDown(KEY_UP)) {
-        fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
-        fWorldY += sinf(fWorldA) * fSpeed * GetFrameTime();
-    }
 
-    if (IsKeyDown(KEY_DOWN)) {
-        fWorldX -= cosf(fWorldA) * fSpeed * GetFrameTime();
-        fWorldY -= sinf(fWorldA) * fSpeed * GetFrameTime();
-    }
 
     fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
     fWorldY += sinf(fWorldA) * fSpeed * GetFrameTime();
 
-    frustum.Far1.x = fWorldX + cosf(fWorldA - fFoVHalf) * fFar;
-    frustum.Far1.y = fWorldY + sinf(fWorldA - fFoVHalf) * fFar;
 
-    frustum.Near1.x = fWorldX + cosf(fWorldA - fFoVHalf) * fNear;
-    frustum.Near1.y = fWorldY + sinf(fWorldA - fFoVHalf) * fNear;
+   // fWorldY += fSpeed * GetFrameTime();
+    //fWorldA = 0.0f;
 
-    frustum.Far2.x = fWorldX + cosf(fWorldA + fFoVHalf) * fFar;
-    frustum.Far2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fFar;
+ /*   frustum.Far1.x = fWorldX - fFoVHalf * fFar;
+    frustum.Far1.y = fWorldY + fFar;
 
-    frustum.Near2.x = fWorldX + cosf(fWorldA + fFoVHalf) * fNear;
-    frustum.Near2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fNear;
+    frustum.Near1.x = fWorldX - fFoVHalf * fNear;
+    frustum.Near1.y = fWorldY + fNear;
+
+    frustum.Far2.x = fWorldX + fFoVHalf * fFar;
+    frustum.Far2.y = fWorldY + fFar;
+
+    frustum.Near2.x = fWorldX + fFoVHalf * fNear;
+    frustum.Near2.y = fWorldY + fNear;*/
+        frustum.Far1.x = fWorldX + cosf(fWorldA - fFoVHalf) * fFar;
+        frustum.Far1.y = fWorldY + sinf(fWorldA - fFoVHalf) * fFar;
+
+        frustum.Near1.x = fWorldX + cosf(fWorldA - fFoVHalf) * fNear;
+        frustum.Near1.y = fWorldY + sinf(fWorldA - fFoVHalf) * fNear;
+
+        frustum.Far2.x = fWorldX + cosf(fWorldA + fFoVHalf) * fFar;
+        frustum.Far2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fFar;
+
+        frustum.Near2.x = fWorldX + cosf(fWorldA + fFoVHalf) * fNear;
+        frustum.Near2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fNear;
+
+   
 
     skyOffset = (float)fmod(skyOffset, texSky.width);
 }
@@ -252,7 +313,10 @@ void Mode7::DrawPlayer()
         }
     }
     float scale = 1;
-    DrawTextureEx(VPplayer[playersprites], { (float)Engine::GetWindow().GetSize().x / 2 - ((VPplayer[playersprites].width / 2) / scale),
+    /*int player_screen_x = ((float)Engine::GetWindow().GetSize().x / 2 - ((VPplayer[playersprites].width / 2) / scale)+ playerXOffset);
+    int player_screen_y = ((float)Engine::GetWindow().GetSize().y / 5 * 2) + ((VPplayer[playersprites].height / 2) / scale);
+    DrawTexture(player[playersprites], player_screen_x, player_screen_y,0,scale, WHITE);*/
+    DrawTextureEx(VPplayer[playersprites], { (float)Engine::GetWindow().GetSize().x / 2 - ((VPplayer[playersprites].width / 2) / scale)+ playerXOffset,
         ((float)Engine::GetWindow().GetSize().y / 5 * 2) + (VPplayer[playersprites].height / 2) / scale },
         0, 
         scale,

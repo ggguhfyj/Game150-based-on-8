@@ -23,8 +23,8 @@ private:
 	static inline float fWorldX = 0.0f;
 	static inline float fWorldY = 0.0f;
 	static inline float fWorldA = 0.0f;
-	static inline float fNear = -450;
-	static inline float fFar = -20;
+	static inline float fNear = -171;
+	static inline float fFar = 28;
 	//static inline float fFoVHalf = PI / 4.0f;
 	static inline float fFoVHalf = 1.3f;
 	static inline float fSpeed = 200.0f;

@@ -44,7 +44,7 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
 
         DrawRectangle((int)position.x + x * blowup_scale, (int)position.y + blowup_scale * ((int)windowsize.y / 2 + y), blowup_scale, blowup_scale, color);
 
-        for (auto it : newMapGen::mapsprites)
+        for (auto it : newMapGen::mapsprites)//430
         {
             if (!it.second.is_drawn )
             {
@@ -57,9 +57,11 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
                 {
                     
                     //DrawTexture(trafficlightsTex, ((int)position.x + x * blowup_scale) - trafficlightsTex.width / 2, ((int)position.y + blowup_scale * ((int)windowsize.y / 2 + y)) - trafficlightsTex.height, WHITE);
-                    float scale = 1;
+                    float scale = fSampleDepth;
+                    float drawx = (float)(x * blowup_scale) - (float)((trafficlightsTex.width / 2.0));
+                    float drawy = (blowup_scale * (windowsize.y / 2 + y)) - (trafficlightsTex.height);
 
-                    DrawTextureEx(trafficlightsTex, { (x * blowup_scale) - ((trafficlightsTex.width / 2) / scale), (blowup_scale * (windowsize.y / 2 + y) ) - (trafficlightsTex.height / scale) },
+                    DrawTextureEx(trafficlightsTex, { drawx,drawy },
                         0,
                         scale
                         ,WHITE);
@@ -108,13 +110,14 @@ void Mode7::Load()
 }
 void Mode7::Update()
 {
-    if (IsKeyDown(KEY_Q)) fNear += 10 * GetFrameTime();
+    //-171
+    if (IsKeyDown(KEY_Q)) fNear += 100 * GetFrameTime();
 
-    if (IsKeyDown(KEY_A)) fNear -= 10 * GetFrameTime();
+    if (IsKeyDown(KEY_A)) fNear -= 100 * GetFrameTime();
 
-    if (IsKeyDown(KEY_W)) fFar += 10 * GetFrameTime();
+    if (IsKeyDown(KEY_W)) fFar += 100 * GetFrameTime();
 
-    if (IsKeyDown(KEY_S)) fFar -= 10 * GetFrameTime();
+    if (IsKeyDown(KEY_S)) fFar -= 100 * GetFrameTime();
 
     if (IsKeyDown(KEY_Z)) fFoVHalf += 0.1f * GetFrameTime();
 

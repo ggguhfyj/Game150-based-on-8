@@ -52,11 +52,13 @@ void Setting::Update([[maybe_unused]] double dt) {
             current_difficulty = static_cast<Difficulty>(
                 (static_cast<int>(current_difficulty) + 1) % 3);
             outdated_menu = true;
+            Mode7::SetDifficulty(current_difficulty);
         }
         if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Left)) {
             current_difficulty = static_cast<Difficulty>(
                 (static_cast<int>(current_difficulty) - 1 + 3) % 3);
             outdated_menu = true;
+            Mode7::SetDifficulty(current_difficulty);
         }
     }
 

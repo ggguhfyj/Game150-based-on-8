@@ -12,7 +12,6 @@ Color Mode7::DrawFog(Color color)
     A+= 1;
     
     
-    
     Color fog = { (unsigned char)(BASE + R),(unsigned char)(BASE + G),(unsigned char)(BASE + B),(unsigned char)(BASE + A) };
 
     Color fogcolor = ColorTint(color, fog);
@@ -173,7 +172,7 @@ void Mode7::Update()
     }
 
     else {
-        if (fSpeed < 600) {
+        if (fSpeed < fMaxSpeed) {
             fSpeed += 10;
         }
         if (fRotationSpeed > 0.0f) {
@@ -257,6 +256,14 @@ void Mode7::Update()
     else {
         isSkiddingSoundPlaying = false;
     }
+    float base_speed = 600.0f;
+    float speed_multiplier = 1.0f;
+    switch (current_difficulty) {
+    case Difficulty::Easy: speed_multiplier = 0.7f; break;
+    case Difficulty::Normal: speed_multiplier = 1.0f; break;
+    case Difficulty::Hard: speed_multiplier = 1.5f; break;
+    }
+    fMaxSpeed = base_speed * speed_multiplier;
 }
 void Mode7::Draw()
 {
@@ -330,5 +337,9 @@ void Mode7::SetVolume(float volume)
     soundVolume = volume;
     SetMusicVolume(sound_ski_default, musicVolume);
     SetSoundVolume(sound_ski_skidding, soundVolume);
+}
+
+void Mode7::SetDifficulty(Difficulty diff) {
+    current_difficulty = diff;
 }
 

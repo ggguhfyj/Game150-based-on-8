@@ -15,7 +15,7 @@ Created:    March 8, 2023
 
 
 
-#define SELECTOPTIONS 4
+#define SELECTOPTIONS 3
 
 
 

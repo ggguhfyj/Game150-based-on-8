@@ -140,6 +140,11 @@ void Mode7::Load()
     imgMap = LoadImageFromTexture(texMap);
 
     fPlayerScreenX = (float)Engine::GetWindow().GetSize().x / 2;
+
+    sound_ski_skidding = LoadSound("Assets/ski_skidding.wav");
+    sound_ski_default = LoadMusicStream("Assets/ski_default.wav");
+    isSkiddingSoundPlaying = false;
+    PlayMusicStream(sound_ski_default);
 }
 void Mode7::Update()
 {
@@ -237,6 +242,21 @@ void Mode7::Update()
     frustum.Near2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fNear;
 
     skyOffset = (float)fmod(skyOffset, texSky.width);
+
+    SetMusicVolume(sound_ski_default, musicVolume);
+    SetSoundVolume(sound_ski_skidding, soundVolume);
+
+    UpdateMusicStream(sound_ski_default);
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
+        if (!isSkiddingSoundPlaying) {
+            PlaySound(sound_ski_skidding);
+            isSkiddingSoundPlaying = true;
+            Engine::GetLogger().LogEvent("playing music now");
+        }
+    }
+    else {
+        isSkiddingSoundPlaying = false;
+    }
 }
 void Mode7::Draw()
 {
@@ -267,6 +287,10 @@ void Mode7::unload()
     UnloadTexture(texSky);
     UnloadTexture(texMap);
     UnloadImage(imgMap);
+
+    UnloadSound(sound_ski_skidding);
+    StopMusicStream(sound_ski_default);
+    UnloadMusicStream(sound_ski_default);
 }
 void Mode7::DrawPlayer()
 {
@@ -298,5 +322,13 @@ void Mode7::DrawPlayer()
         0, 
         scale,
         WHITE);*/
+}
+
+void Mode7::SetVolume(float volume)
+{
+    musicVolume = volume;
+    soundVolume = volume;
+    SetMusicVolume(sound_ski_default, musicVolume);
+    SetSoundVolume(sound_ski_skidding, soundVolume);
 }
 

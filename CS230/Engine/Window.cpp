@@ -15,6 +15,7 @@ Created:    March 11, 2025
 void CS230::Window::Start(std::string title) {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT | FLAG_MSAA_4X_HINT);
     InitWindow(default_width, default_height, title.c_str());
+    InitAudioDevice();
     SetExitKey(KEY_NULL);
     rlDisableBackfaceCulling();
     BeginDrawing();

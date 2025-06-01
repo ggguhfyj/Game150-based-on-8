@@ -41,8 +41,10 @@ void Gam150::Update([[maybe_unused]] double dt) {
     {
         TestMap::drawnRoadSegments += 2;
     }
-
-
+    if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Escape)) {
+        Engine::GetLogger().LogEvent("Setting next state to Gam150");
+        Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::GameOver));
+    }
 }
 
 

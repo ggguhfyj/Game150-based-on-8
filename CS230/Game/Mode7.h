@@ -74,6 +74,11 @@ private:
 	static inline float fPlayerHDamping = 200.0f; // Damping for horizontal movement
 	static inline float fMaxPlayerHSpeed = 200.0f;// Maximum horizontal speed for the player
 
+	static inline Sound sound_ski_skidding;
+	static inline Music sound_ski_default;
+	static inline bool isSkiddingSoundPlaying;
+	static inline float musicVolume = 1.0;
+	static inline float soundVolume = 1.0;
 
 public:
 	static void Load();
@@ -81,4 +86,5 @@ public:
 	static void Draw();
 	static void unload();
 	static void DrawPlayer();
+	static void SetVolume(float volume);
 };

@@ -157,12 +157,12 @@ void Mode7::Update()
     if (IsKeyDown(KEY_X)) fFoVHalf -= 0.1f * GetFrameTime();
 
   
-    if (IsKeyDown(KEY_RIGHT)) {
+    if (IsKeyPressed(KEY_RIGHT)) {
         playersprites = 0;
         right = true;
         
     }
-    else if (IsKeyDown(KEY_LEFT)) {
+    else if (IsKeyPressed(KEY_LEFT)) {
         playersprites = 0;
         right = false;
     }

@@ -42,6 +42,11 @@ private:
 	static inline Texture2D player[6];
 	static inline Texture2D BWplayer[6];
 	static inline Texture2D VPplayer[6];
+
+	static inline Texture2D FovplayerRight[18];
+	static inline Texture2D FovplayerLeft[18];
+
+	static inline Texture2D trees[3];
 	static inline Image imgMap;
 
 	static inline Frustum frustum;

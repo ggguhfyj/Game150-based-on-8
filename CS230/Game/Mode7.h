@@ -78,7 +78,9 @@ private:
 
 	static inline Sound sound_ski_skidding;
 	static inline Music sound_ski_default;
+	static inline Music sound_wind;
 	static inline bool isSkiddingSoundPlaying;
+	static inline bool windPlaying;
 	static inline float musicVolume = 1.0;
 	static inline float soundVolume = 1.0;
 

@@ -142,8 +142,12 @@ void Mode7::Load()
 
     sound_ski_skidding = LoadSound("Assets/ski_skidding.wav");
     sound_ski_default = LoadMusicStream("Assets/ski_default.wav");
+    sound_wind = LoadMusicStream("Assets/wind_.wav");
     isSkiddingSoundPlaying = false;
+    windPlaying = false;
     PlayMusicStream(sound_ski_default);
+    PlayMusicStream(sound_wind);
+    windPlaying = true;
 }
 void Mode7::Update()
 {
@@ -174,6 +178,10 @@ void Mode7::Update()
     else {
         if (fSpeed < fMaxSpeed) {
             fSpeed += 10;
+        }
+        if (fSpeed >= fMaxSpeed - 10) {
+            SetMusicVolume(sound_wind, musicVolume*2);
+            Engine::GetLogger().LogEvent("playing music now");
         }
         if (fRotationSpeed > 0.0f) {
             fRotationSpeed -= fRotationDamping * GetFrameTime();
@@ -256,6 +264,10 @@ void Mode7::Update()
     else {
         isSkiddingSoundPlaying = false;
     }
+    UpdateMusicStream(sound_wind);
+    if (!IsMusicStreamPlaying(sound_wind) && windPlaying) {
+        PlayMusicStream(sound_wind);
+    }
     float base_speed = 600.0f;
     float speed_multiplier = 1.0f;
     switch (current_difficulty) {
@@ -298,6 +310,7 @@ void Mode7::unload()
     UnloadSound(sound_ski_skidding);
     StopMusicStream(sound_ski_default);
     UnloadMusicStream(sound_ski_default);
+    UnloadMusicStream(sound_wind);
 }
 void Mode7::DrawPlayer()
 {
@@ -337,6 +350,7 @@ void Mode7::SetVolume(float volume)
     soundVolume = volume;
     SetMusicVolume(sound_ski_default, musicVolume);
     SetSoundVolume(sound_ski_skidding, soundVolume);
+    SetMusicVolume(sound_wind, musicVolume);
 }
 
 void Mode7::SetDifficulty(Difficulty diff) {

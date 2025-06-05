@@ -1,4 +1,6 @@
 #include "newmapGen.h"
+#include "Setting.h"
+#include "Mode7.h"
 
 void newMapGen::LoadTextures()
 {
@@ -17,9 +19,28 @@ void newMapGen::generatesnowTexture()
 	BeginTextureMode(target);
 	
 	//int ichasm_1 = GetRandomValue(3, 7);
-	int itree_1 =  GetRandomValue(3, 7);
+	int itree_1;
+	int itree_2;
+
+	switch (Mode7::current_difficulty) {
+		case Difficulty::Easy:
+			itree_1 = GetRandomValue(1, 4);
+			itree_2 = GetRandomValue(1, 4);
+			break;
+		case Difficulty::Normal:
+			itree_1 = GetRandomValue(3, 7);
+			itree_2 = GetRandomValue(3, 7);
+			break;
+		case Difficulty::Hard:
+			itree_1 = GetRandomValue(5, 10);
+			itree_2 = GetRandomValue(5, 10);
+			break;
+		default:
+			itree_1 = GetRandomValue(3, 7);
+			itree_2 = GetRandomValue(3, 7);
+			break;
+	}
 	//int ipole_1 = GetRandomValue(3, 7);
-	int itree_2 = GetRandomValue(3, 7);
 	
 	DrawTexture(snow_texture,0,0,WHITE);
 

@@ -84,7 +84,6 @@ private:
 	static inline float musicVolume = 1.0;
 	static inline float soundVolume = 1.0;
 
-	static inline Difficulty current_difficulty = Difficulty::Normal;
 public:
 	static void Load();
 	static void Update();
@@ -93,4 +92,5 @@ public:
 	static void DrawPlayer();
 	static void SetVolume(float volume);
 	static void SetDifficulty(Difficulty diff);
+	static inline Difficulty current_difficulty = Difficulty::Normal;
 };

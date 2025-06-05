@@ -451,13 +451,11 @@ void TestMap::Generate_TrafficLights()
     Traffic_Light_List.clear();
     std::unordered_map<Position*, int> connectionCount;
 
-    // Road_List 기준으로 각 Position의 연결 수 계산
     for (size_t i = 0; i + 1 < Road_List.size(); i += 2) {
         connectionCount[Road_List[i]]++;
         connectionCount[Road_List[i + 1]]++;
     }
 
-    // 연결 수가 3인 점들만 후보로 추가
     std::vector<Position*> candidates;
     for (auto& [pos, count] : connectionCount) {
         if (count == 3) {
@@ -465,7 +463,6 @@ void TestMap::Generate_TrafficLights()
         }
     }
 
-    // 후보 섞고 최대 4개만 선택
     unsigned seed = (unsigned int)std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(candidates.begin(), candidates.end(), std::default_random_engine(seed));
     int maxTrafficLights = std::min(4, static_cast<int>(candidates.size()));

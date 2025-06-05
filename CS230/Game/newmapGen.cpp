@@ -36,22 +36,8 @@ void newMapGen::generatesnowTexture()
 		DrawTextureV(shadow_for_tree2_tex, { (float)textureposition.x,(float)textureposition.y }, WHITE);
 		mapsprites.insert({ textureposition, { tree2,false } });
 
-	}/*
-	for (int i = 0; i < ipole_1;i++)
-	{
-		Math::vec2 textureposition = { (float)GetRandomValue(50,1950),(float)GetRandomValue(50,1950) };
-		DrawTextureV(shadow_for_pole_tex, { (float)textureposition.x,(float)textureposition.y }, WHITE);
-		mapsprites.insert({ textureposition, { pole,false } });
-
 	}
-	for (int i = 0; i < ichasm_1;i++)
-	{
-		Math::vec2 textureposition = { (float)GetRandomValue(50,1950),(float)GetRandomValue(50,1950) };
-		DrawTextureV(chasm_tex, { (float)textureposition.x,(float)textureposition.y }, WHITE);
-		mapsprites.insert({ textureposition, { chasm,false } });
-
-
-	}*/
+	
 
 
 

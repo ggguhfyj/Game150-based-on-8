@@ -46,28 +46,23 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
 
         for (auto it : newMapGen::mapsprites)
         {
-            if (!it.second.is_drawn )
+            if (!it.second.is_drawn)
             {
                 double dx = it.first.x - (double)texX;
                 double dy = it.first.y - (double)texY;
-                
-                
 
-                if (std::hypot(dx, dy) < 35)
+                float scale = 2.5f * fSampleDepth; //the reason why I used 2.5f is make scale size more maximize
+
+                if (std::hypot(dx, dy) < 50.0f)
                 {
-                    
-                    //DrawTexture(trafficlightsTex, ((int)position.x + x * blowup_scale) - trafficlightsTex.width / 2, ((int)position.y + blowup_scale * ((int)windowsize.y / 2 + y)) - trafficlightsTex.height, WHITE);
-                    float scale = 1;
 
-                    DrawTextureEx(trafficlightsTex, { (x * blowup_scale) - ((trafficlightsTex.width / 2) / scale), (blowup_scale * (windowsize.y / 2 + y) ) - (trafficlightsTex.height / scale) },
-                        0,
-                        scale
-                        ,WHITE);
+                    float drawx = (float)(x * blowup_scale) - (trafficlightsTex.width * scale / 2.0f);
+                    float drawy = blowup_scale * (windowsize.y / 2 + y) - trafficlightsTex.height * scale;
+
+                    DrawTextureEx(trafficlightsTex, { drawx, drawy }, 0, scale, WHITE);
                     it.second.is_drawn = true;
-                    
                 }
             }
-
         }
     }
 }
@@ -78,188 +73,212 @@ void Mode7::Load()
 
     texMap = LoadTexture("CreatedMap.png");
     windowtabs = LoadTexture("Assets/windowtabs.png");
-    trafficlightsTex = LoadTexture("Assets/tree.png");
-
+    trafficlightsTex = LoadTexture("Assets/tree/dithered-image(2).png");
     player[0] = LoadTexture("Assets/Player/PlayerLeft-1.png");
     player[1] = LoadTexture("Assets/Player/PlayerLeft-2.png");
     player[2] = LoadTexture("Assets/Player/PlayerLeft-3.png");
-
-
     player[3] = LoadTexture("Assets/Player/PlayerRight-1.png");
     player[4] = LoadTexture("Assets/Player/PlayerRight-2.png");
     player[5] = LoadTexture("Assets/Player/PlayerRight-3.png");
-
     BWplayer[0] = LoadTexture("Assets/Player/BW/1.png");
     BWplayer[1] = LoadTexture("Assets/Player/BW/2.png");
     BWplayer[2] = LoadTexture("Assets/Player/BW/3.png");
     BWplayer[3] = LoadTexture("Assets/Player/BW/4.png");
     BWplayer[4] = LoadTexture("Assets/Player/BW/5.png");
     BWplayer[5] = LoadTexture("Assets/Player/BW/6.png");
-
     VPplayer[0] = LoadTexture("Assets/Player/vaporwave/scanlines/1.png");
     VPplayer[1] = LoadTexture("Assets/Player/vaporwave/scanlines/2.png");
     VPplayer[2] = LoadTexture("Assets/Player/vaporwave/scanlines/3.png");
     VPplayer[3] = LoadTexture("Assets/Player/vaporwave/scanlines/4.png");
     VPplayer[4] = LoadTexture("Assets/Player/vaporwave/scanlines/5.png");
     VPplayer[5] = LoadTexture("Assets/Player/vaporwave/scanlines/6.png");
+    trees[0] = LoadTexture("Assets/tree/dithered-image.png");
+    trees[1] = LoadTexture("Assets/tree/dithered-image(1).png");
+    trees[2] = LoadTexture("Assets/tree/dithered-image(2).png");
+
+    FovplayerRight[0]  = LoadTexture("Assets/Player/POV/Right hand/1.png");
+    FovplayerRight[1]  = LoadTexture("Assets/Player/POV/Right hand/2.png");
+    FovplayerRight[2]  = LoadTexture("Assets/Player/POV/Right hand/3.png");
+    FovplayerRight[3]  = LoadTexture("Assets/Player/POV/Right hand/4.png");
+    FovplayerRight[4]  = LoadTexture("Assets/Player/POV/Right hand/5.png");
+    FovplayerRight[5]  = LoadTexture("Assets/Player/POV/Right hand/6.png");
+    FovplayerRight[6]  = LoadTexture("Assets/Player/POV/Right hand/7.png");
+    FovplayerRight[7]  = LoadTexture("Assets/Player/POV/Right hand/8.png");
+    FovplayerRight[8]  = LoadTexture("Assets/Player/POV/Right hand/9.png");
+    FovplayerRight[9]  = LoadTexture("Assets/Player/POV/Right hand/10.png");
+    FovplayerRight[10] = LoadTexture("Assets/Player/POV/Right hand/11.png");
+    FovplayerRight[11] = LoadTexture("Assets/Player/POV/Right hand/12.png");
+    FovplayerRight[12] = LoadTexture("Assets/Player/POV/Right hand/13.png");
+    FovplayerRight[13] = LoadTexture("Assets/Player/POV/Right hand/14.png");
+    FovplayerRight[14] = LoadTexture("Assets/Player/POV/Right hand/15.png");
+    FovplayerRight[15] = LoadTexture("Assets/Player/POV/Right hand/16.png");
+    FovplayerRight[16] = LoadTexture("Assets/Player/POV/Right hand/17.png");
+    FovplayerRight[17] = LoadTexture("Assets/Player/POV/Right hand/18.png");
+   
+
+    FovplayerLeft[0]  = LoadTexture("Assets/Player/POV/Left hand/1.png");
+    FovplayerLeft[1]  = LoadTexture("Assets/Player/POV/Left hand/2.png");
+    FovplayerLeft[2]  = LoadTexture("Assets/Player/POV/Left hand/3.png");
+    FovplayerLeft[3]  = LoadTexture("Assets/Player/POV/Left hand/4.png");
+    FovplayerLeft[4]  = LoadTexture("Assets/Player/POV/Left hand/5.png");
+    FovplayerLeft[5]  = LoadTexture("Assets/Player/POV/Left hand/6.png");
+    FovplayerLeft[6]  = LoadTexture("Assets/Player/POV/Left hand/7.png");
+    FovplayerLeft[7]  = LoadTexture("Assets/Player/POV/Left hand/8.png");
+    FovplayerLeft[8]  = LoadTexture("Assets/Player/POV/Left hand/9.png");
+    FovplayerLeft[9]  = LoadTexture("Assets/Player/POV/Left hand/10.png");
+    FovplayerLeft[10] = LoadTexture("Assets/Player/POV/Left hand/11.png");
+    FovplayerLeft[11] = LoadTexture("Assets/Player/POV/Left hand/12.png");
+    FovplayerLeft[12] = LoadTexture("Assets/Player/POV/Left hand/13.png");
+    FovplayerLeft[13] = LoadTexture("Assets/Player/POV/Left hand/14.png");
+    FovplayerLeft[14] = LoadTexture("Assets/Player/POV/Left hand/15.png");
+    FovplayerLeft[15] = LoadTexture("Assets/Player/POV/Left hand/16.png");
+    FovplayerLeft[16] = LoadTexture("Assets/Player/POV/Left hand/17.png");
+    FovplayerLeft[17] = LoadTexture("Assets/Player/POV/Left hand/18.png");
+
+
+
     imgMap = LoadImageFromTexture(texMap);
 
     fPlayerScreenX = (float)Engine::GetWindow().GetSize().x / 2;
 }
 void Mode7::Update()
 {
-    if (IsKeyDown(KEY_Q)) fNear += 10 * GetFrameTime();
+    //-171
+    if (IsKeyDown(KEY_Q)) fNear += 100 * GetFrameTime();
 
-    if (IsKeyDown(KEY_A)) fNear -= 10 * GetFrameTime();
+    if (IsKeyDown(KEY_A)) fNear -= 100 * GetFrameTime();
 
-    if (IsKeyDown(KEY_W)) fFar += 10 * GetFrameTime();
+    if (IsKeyDown(KEY_W)) fFar += 500 * GetFrameTime();
 
-    if (IsKeyDown(KEY_S)) fFar -= 10 * GetFrameTime();
+    if (IsKeyDown(KEY_S)) fFar -= 500 * GetFrameTime();
 
     if (IsKeyDown(KEY_Z)) fFoVHalf += 0.1f * GetFrameTime();
 
     if (IsKeyDown(KEY_X)) fFoVHalf -= 0.1f * GetFrameTime();
 
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
-        if (IsKeyDown(KEY_RIGHT)) {
-
-            right = true;
-            playerXspeed += playerAccel * GetFrameTime();
-
-        }
-        else if (IsKeyDown(KEY_LEFT)) {
-            right = false;
-            playerXspeed -= playerAccel * GetFrameTime();
-        }
-        else {
-
-            if (playerXspeed > 0.0f) {
-                playerXspeed -= playerFriction * GetFrameTime();
-                if (playerXspeed < 0.0f) playerXspeed = 0.0f;
-            }
-            else if (playerXspeed < 0.0f) {
-                playerXspeed += playerFriction * GetFrameTime();
-                if (playerXspeed > 0.0f) playerXspeed = 0.0f;
-            }
-        }
-        
-        if (right == true)
-        {
-
-
-            /*if (fSpeed < 300) {
-                fSpeed = 300;
-            }
-
-            fRotationSpeed += fRotationAccel * GetFrameTime();
-            fSpeed = fSpeed - abs(fRotationSpeed);
-
-            if (fRotationSpeed > fMaxRotationSpeed) {
-                fRotationSpeed = fMaxRotationSpeed;
-            }*/
-
-        }
-        if (right == false)
-        {
-
-
-
-
-            /* if (fSpeed < 300) {
-                 fSpeed = 300;
-             }
-
-             fRotationSpeed -= fRotationAccel * GetFrameTime();
-             fSpeed = fSpeed - abs(fRotationSpeed);
-
-             if (fRotationSpeed < -fMaxRotationSpeed) {
-                 fRotationSpeed = -fMaxRotationSpeed;
-             }*/
-
-        }
+  
+    if (IsKeyPressed(KEY_RIGHT)) {
+        playersprites = 0;
+        right = true;
         
     }
-    playerXOffset += playerXspeed * GetFrameTime();
-    if (playerXOffset <= leftWall || playerXOffset >= rightWall) {
-        if (playerXOffset <= leftWall) {
-            playerXOffset = leftWall;
-            playerXspeed = 0;
-            if (fSpeed < 300) {
-                fSpeed = 300;
-            }
+    else if (IsKeyPressed(KEY_LEFT)) {
+        playersprites = 0;
+        right = false;
+    }
 
-            fRotationSpeed += fRotationAccel * GetFrameTime();
-            fSpeed = fSpeed - abs(fRotationSpeed);
+    else {
+        if (fSpeed < 600) {
+            fSpeed += 10;
+        }
+        if (fRotationSpeed > 0.0f) {
+            fRotationSpeed -= fRotationDamping * GetFrameTime();
+            if (fRotationSpeed < 0.0f)
+                fRotationSpeed = 0.0f;
+        }
+        else if (fRotationSpeed < 0.0f) {
+            fRotationSpeed += fRotationDamping * GetFrameTime();
+            if (fRotationSpeed > 0.0f)
+                fRotationSpeed = 0.0f;
+        }
+    }
+    if (right)
+    {
+        if (fSpeed < 300) {
+            fSpeed = 300;
+        }
+        fRotationSpeed += fRotationAccel * GetFrameTime();
+        fSpeed = fSpeed - abs(fRotationSpeed);
+        if (fRotationSpeed > fMaxRotationSpeed)
+            fRotationSpeed = fMaxRotationSpeed;
 
-            if (fRotationSpeed > fMaxRotationSpeed) {
-                fRotationSpeed = fMaxRotationSpeed;
-            }
-
-            fWorldA -= wallBounceRotation * GetFrameTime();
-
+    }
+    else
+    {
+        if (fSpeed < 300) {
+            fSpeed = 300;
         }
 
-        // ìš°ì¸¡ ë²½ ì¶©ëŒ
-        if (playerXOffset >= rightWall) {
-            playerXOffset = rightWall;
-            playerXspeed = 0;
+        fRotationSpeed -= fRotationAccel * GetFrameTime();
+        fSpeed = fSpeed - abs(fRotationSpeed);
 
-            if (fSpeed < 300) {
-                fSpeed = 300;
-            }
+        if (fRotationSpeed < -fMaxRotationSpeed)
+            fRotationSpeed = -fMaxRotationSpeed;
 
-            fRotationSpeed -= fRotationAccel * GetFrameTime();
-            fSpeed = fSpeed - abs(fRotationSpeed);
-
-            if (fRotationSpeed < -fMaxRotationSpeed) {
-                fRotationSpeed = -fMaxRotationSpeed;
-            }
-            fWorldA += wallBounceRotation * GetFrameTime();
-        }
-        
-        /*fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
-        fWorldY += sinf(fWorldA) * fSpeed * GetFrameTime();*/
     }
     
-
-   // fWorldA += fRotationSpeed * GetFrameTime();
+    
+    fWorldA += fRotationSpeed * GetFrameTime();
     skyOffset += 400.0f * fRotationSpeed * GetFrameTime();
 
+    if (IsKeyDown(KEY_UP)) {
+        fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
+        fWorldY += sinf(fWorldA) * fSpeed * GetFrameTime();
+    }
 
+    if (IsKeyDown(KEY_DOWN)) {
+        fWorldX -= cosf(fWorldA) * fSpeed * GetFrameTime();
+        fWorldY -= sinf(fWorldA) * fSpeed * GetFrameTime();
+    }
 
     fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
     fWorldY += sinf(fWorldA) * fSpeed * GetFrameTime();
 
+    frustum.Far1.x = fWorldX + cosf(fWorldA - fFoVHalf) * fFar;
+    frustum.Far1.y = fWorldY + sinf(fWorldA - fFoVHalf) * fFar;
 
-   // fWorldY += fSpeed * GetFrameTime();
-    //fWorldA = 0.0f;
+    frustum.Near1.x = fWorldX + cosf(fWorldA - fFoVHalf) * fNear;
+    frustum.Near1.y = fWorldY + sinf(fWorldA - fFoVHalf) * fNear;
 
- /*   frustum.Far1.x = fWorldX - fFoVHalf * fFar;
-    frustum.Far1.y = fWorldY + fFar;
+    frustum.Far2.x = fWorldX + cosf(fWorldA + fFoVHalf) * fFar;
+    frustum.Far2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fFar;
 
-    frustum.Near1.x = fWorldX - fFoVHalf * fNear;
-    frustum.Near1.y = fWorldY + fNear;
-
-    frustum.Far2.x = fWorldX + fFoVHalf * fFar;
-    frustum.Far2.y = fWorldY + fFar;
-
-    frustum.Near2.x = fWorldX + fFoVHalf * fNear;
-    frustum.Near2.y = fWorldY + fNear;*/
-        frustum.Far1.x = fWorldX + cosf(fWorldA - fFoVHalf) * fFar;
-        frustum.Far1.y = fWorldY + sinf(fWorldA - fFoVHalf) * fFar;
-
-        frustum.Near1.x = fWorldX + cosf(fWorldA - fFoVHalf) * fNear;
-        frustum.Near1.y = fWorldY + sinf(fWorldA - fFoVHalf) * fNear;
-
-        frustum.Far2.x = fWorldX + cosf(fWorldA + fFoVHalf) * fFar;
-        frustum.Far2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fFar;
-
-        frustum.Near2.x = fWorldX + cosf(fWorldA + fFoVHalf) * fNear;
-        frustum.Near2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fNear;
-
+    frustum.Near2.x = fWorldX + cosf(fWorldA + fFoVHalf) * fNear;
+    frustum.Near2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fNear;
    
-
     skyOffset = (float)fmod(skyOffset, texSky.width);
+
+    // --- Collision and effects ---
+    const float mapWidth = 2000.0f;
+    const float mapHeight = 2000.0f;
+    float px = fmodf((fWorldX + mapWidth), mapWidth);
+    float py = fmodf((fWorldY + mapHeight), mapHeight);
+
+    static std::unordered_set<Math::vec2> prev_collided_trees; 
+
+    std::unordered_set<Math::vec2> current_collided_trees;
+
+    for (const auto& pair : newMapGen::mapsprites) {
+        const Math::vec2& objPos = pair.first;
+        const auto& objData = pair.second;
+
+        if (objData.sprite == newMapGen::tree1 || objData.sprite == newMapGen::tree2) {
+            float dx = fabsf(static_cast<float>(objPos.x) - px);
+            float dy = fabsf(static_cast<float>(objPos.y) - py);
+            if (dx > mapWidth / 2.0f) dx = mapWidth - dx;
+            if (dy > mapHeight / 2.0f) dy = mapHeight - dy;
+            float distSq = dx * dx + dy * dy;
+
+            if (distSq < 1600.0f) {
+                current_collided_trees.insert(objPos);
+                // Only increment if this tree was not collided last frame
+                if (prev_collided_trees.find(objPos) == prev_collided_trees.end()) {
+                    tree_collision_count++;
+                    screen_flash = 1.0f;
+                }
+            }
+        }
+    }
+    // Update set for the next frame
+    prev_collided_trees = current_collided_trees;
+    // ---effects ---
+    if (screen_flash > 0.0f) {
+        screen_flash -= GetFrameTime() * fade_speed;
+        if (screen_flash < 0.0f) { 
+            screen_flash = 0.0f; 
+        }
+    }
+
 }
 void Mode7::Draw()
 {
@@ -271,6 +290,13 @@ void Mode7::Draw()
         DrawMode7Line(y);
     }
     //DrawTexturePro(texSky, skySource, skyDest, { 0, 0 }, 0.0f, WHITE);
+
+      // ---screen_flash_effects ---
+    if (screen_flash > 0.0f) {
+
+        unsigned char alpha = static_cast<unsigned char>(screen_flash * 180); // 0~180 
+        DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Color{ 255,0,0,alpha });
+    }
     DrawPlayer();
 
 
@@ -284,6 +310,7 @@ void Mode7::Draw()
         20,
         YELLOW);
     DrawFPS(500, 100);
+    DrawText(TextFormat("³ª¹« Ãæµ¹ È½¼ö: %d", tree_collision_count), 100, 400, 30, RED);
 }
 void Mode7::unload()
 {
@@ -298,28 +325,28 @@ void Mode7::DrawPlayer()
 
     if (right)
     {
-        if (playersprites > 0 && counter >3)
-        {
-            counter = 0;
-            playersprites--;
-        }
-    }
-    else 
-    {
-        if (playersprites < 5 && counter > 3)
+        if (playersprites < 18 && counter > 1)
         {
             counter = 0;
             playersprites++;
         }
+        DrawTextureEx(FovplayerLeft[playersprites], { -600,110 }, 0, 2, WHITE);
     }
-    float scale = 1;
-    /*int player_screen_x = ((float)Engine::GetWindow().GetSize().x / 2 - ((VPplayer[playersprites].width / 2) / scale)+ playerXOffset);
-    int player_screen_y = ((float)Engine::GetWindow().GetSize().y / 5 * 2) + ((VPplayer[playersprites].height / 2) / scale);
-    DrawTexture(player[playersprites], player_screen_x, player_screen_y,0,scale, WHITE);*/
-    DrawTextureEx(VPplayer[playersprites], { (float)Engine::GetWindow().GetSize().x / 2 - ((VPplayer[playersprites].width / 2) / scale)+ playerXOffset,
+    else 
+    {
+        if (playersprites < 18 && counter > 1)
+        {
+            counter = 0;
+            playersprites++;
+        }
+        DrawTextureEx(FovplayerRight[playersprites], { -600,110 }, 0, 2, WHITE);
+    }
+
+
+   /* DrawTextureEx(VPplayer[playersprites], { (float)Engine::GetWindow().GetSize().x / 2 - ((VPplayer[playersprites].width / 2) / scale),
         ((float)Engine::GetWindow().GetSize().y / 5 * 2) + (VPplayer[playersprites].height / 2) / scale },
         0, 
         scale,
-        WHITE);
+        WHITE);*/
 }
 

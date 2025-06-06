@@ -21,12 +21,7 @@ Mode2::Mode2()// how to get the static constexpr from window.h using Get size an
 }   
 
 void Mode2::Load() {
-    //gameobjectmanager.Add(new Meteor({  static_cast<double>(GetScreenWidth()), static_cast<double>(GetScreenHeight()) }));
-    //gameobjectmanager.Add(new Meteor({  static_cast<double>(GetScreenWidth()), static_cast<double>(GetScreenHeight()) }));
-    //gameobjectmanager.Add(new Meteor({  static_cast<double>(GetScreenWidth()), static_cast<double>(GetScreenHeight()) }));
-    //gameobjectmanager.Add(new Meteor({  static_cast<double>(GetScreenWidth()), static_cast<double>(GetScreenHeight()) }));
-    //gameobjectmanager.Add(new Meteor({  static_cast<double>(GetScreenWidth()), static_cast<double>(GetScreenHeight()) }));
-    
+
     //ship.Load();
     camera.SetPosition({ 0,0 });
     ship_ptr = new Ship({ 0,0 });
@@ -40,20 +35,17 @@ void Mode2::Draw() {
         static_cast<double>(Engine::GetWindow().GetSize().x / 2),
         static_cast<double>(Engine::GetWindow().GetSize().y / 2)
     };
-
-    Math::TransformationMatrix translate_to_screen_center_matrix = Math::TranslationMatrix(screen_center);
-    Math::TransformationMatrix inverse_ship_rotation_matrix = camera.Getoff1setMatrix(); // Provides Math::RotationMatrix(-ship_ptr->GetRotation())
+    Math::TransformationMatrix translate_to_screen_center_matrix = Math::TranslationMatrix(Math::vec2{(double)Engine::GetWindow().GetSize().x,(double)Engine::GetWindow().GetSize().y });
+    Math::TransformationMatrix inverse_ship_rotation_matrix = Math::RotationMatrix(-ship_ptr->GetRotation()); // Provides Math::RotationMatrix(-ship_ptr->GetRotation())
     Math::TransformationMatrix translate_ship_to_origin_matrix = Math::TranslationMatrix(-ship_ptr->GetPosition());
+    
 
-    Math::TransformationMatrix pov_view_matrix =
-        translate_to_screen_center_matrix *
-        inverse_ship_rotation_matrix *
-        translate_ship_to_origin_matrix;
 
-    road_ptr->Draw(pov_view_matrix);
 
-    ship_ptr->Draw(Math::TranslationMatrix(screen_center) * camera.GetoffsetMatrix());
+    road_ptr->DrawPerspective(translate_to_screen_center_matrix * translate_ship_to_origin_matrix * inverse_ship_rotation_matrix);//rotation based on 0,0.
 
+    ship_ptr->Draw(Math::TranslationMatrix(screen_center) * inverse_ship_rotation_matrix);
+    
 }
     void Mode2::Update([[maybe_unused]] double dt) {
 

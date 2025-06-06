@@ -36,7 +36,7 @@ void Splash::Update([[maybe_unused]] double dt) {
     
     if (counter >= 2) {
         Engine::GetGameStateManager().ClearNextGameState();
-        Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::Mode1));
+        Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::MainMenu));
     }
     counter += dt;
     

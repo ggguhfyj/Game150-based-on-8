@@ -86,7 +86,7 @@ Math::TransformationMatrix CS230::Camera::GetoffsetMatrix()
 
 Math::TransformationMatrix CS230::Camera::Getoff1setMatrix()
 {
-    Math::RotationMatrix rotate_view(-camerarotation);
+    Math::RotationMatrix rotate_view(camerarotation);
     // 'position' should match car's position
 
    // 3. Combine the matrices. Read operations right-to-left:

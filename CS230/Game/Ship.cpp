@@ -48,10 +48,12 @@ void Ship::Update([[maybe_unused]] double dt) {
         drawflame = true;
         //velocity +=;
         UpdateVelocity(Math::RotationMatrix(GetRotation()) * Math::vec2{0,speed*dt});
-
-        
     }
-
+    if (Engine::GetInput().KeyDown(CS230::Input::Keys::S)) {
+        drawflame = true;
+      
+        UpdateVelocity(Math::RotationMatrix(GetRotation()) * Math::vec2{ 0,-speed * dt });
+    }
     if (Engine::GetInput().KeyDown(CS230::Input::Keys::A)) {
         //angle+= rotation_speed;
         UpdateRotation(rotation_speed*dt);
@@ -62,7 +64,7 @@ void Ship::Update([[maybe_unused]] double dt) {
     }
     //velocity -= velocity * drag * dt;
     UpdateVelocity({ -GetVelocity().x * drag*dt,-GetVelocity().y * drag*dt});
-    //Engine::GetLogger().LogDebug("Velocity: " + std::to_string(GetVelocity().x) + ", " + std::to_string(GetVelocity().y));
+    //Engine::GetLogger( ).LogDebug("Velocity: " + std::to_string(GetVelocity().x) + ", " + std::to_string(GetVelocity().y));
 
     //position += velocity * dt;
     UpdatePosition({ GetVelocity().x * dt, GetVelocity().y * dt });

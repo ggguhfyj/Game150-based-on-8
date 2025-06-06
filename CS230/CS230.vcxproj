@@ -40,8 +40,9 @@
     <ClCompile Include="Game\Cat.cpp" />
     <ClCompile Include="Game\Crates.cpp" />
     <ClCompile Include="Game\Gam150.cpp" />
+    <ClCompile Include="Game\GameOver.cpp" />
     <ClCompile Include="Game\Mode7.cpp" />
-    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\newmapGen.cpp" />
     <ClCompile Include="Game\Road.cpp" />
     <ClCompile Include="Game\MainMenu.cpp" />
     <ClCompile Include="Game\mapGen.cpp" />
@@ -49,6 +50,7 @@
     <ClCompile Include="Game\Mode1.cpp" />
     <ClCompile Include="Game\Mode2.cpp" />
     <ClCompile Include="Game\Robot.cpp" />
+    <ClCompile Include="Game\Setting.cpp" />
     <ClCompile Include="Game\Ship.cpp" />
     <ClCompile Include="Game\Splash.cpp" />
     <ClCompile Include="main.cpp" />
@@ -56,6 +58,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Animation.h" />
     <ClInclude Include="Engine\Camera.h" />
+    <ClInclude Include="Engine\Component.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Engine\Font.h" />
     <ClInclude Include="Engine\Fonts.h" />
@@ -70,6 +73,7 @@
     <ClInclude Include="Engine\Sprite.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\TextureManager.h" />
+    <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\Vec2.h" />
     <ClInclude Include="Engine\Window.h" />
     <ClInclude Include="Game\Asteroid.h" />
@@ -78,8 +82,9 @@
     <ClInclude Include="Game\Cat.h" />
     <ClInclude Include="Game\Crates.h" />
     <ClInclude Include="Game\Gam150.h" />
+    <ClInclude Include="Game\GameOver.h" />
     <ClInclude Include="Game\Mode7.h" />
-    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\newmapGen.h" />
     <ClInclude Include="Game\Road.h" />
     <ClInclude Include="Game\MainMenu.h" />
     <ClInclude Include="Game\mapGen.h" />
@@ -87,6 +92,7 @@
     <ClInclude Include="Game\Mode1.h" />
     <ClInclude Include="Game\Mode2.h" />
     <ClInclude Include="Game\Robot.h" />
+    <ClInclude Include="Game\Setting.h" />
     <ClInclude Include="Game\Ship.h" />
     <ClInclude Include="Game\Splash.h" />
     <ClInclude Include="Game\States.h" />
@@ -191,7 +197,7 @@ xcopy /d /y Assets\* "$(OutputPath)Assets"
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>

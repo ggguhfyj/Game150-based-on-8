@@ -25,6 +25,7 @@ Engine::Engine() :
 void Engine::Stop() {
 	//Stop all services
 	logger.LogEvent("Engine Stopped");
+	CloseAudioDevice();
 }
 
 void Engine::Update() {

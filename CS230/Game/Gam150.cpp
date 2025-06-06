@@ -22,12 +22,23 @@ void Gam150::Load() {
     newMapGen::LoadTextures();
     newMapGen::generatesnowTexture();
     Mode7::Load();
+    target = LoadRenderTexture(Engine::GetWindow().GetSize().x, Engine::GetWindow().GetSize().y);
+    fish = LoadShader(0,"Assets/shaders/fisheye.fs");
+    scanlines = LoadShader(0, "Assets/shaders/scanlines.fs");
 }
 
 void Gam150::Draw() {
-    Engine::GetWindow().Clear(0x222222FF);
-    Mode7::Draw();
+    BeginTextureMode(target);
     
+    Engine::GetWindow().Clear(0x222222FF);
+
+    Mode7::Draw();
+    EndTextureMode();
+
+    BeginShaderMode(scanlines);
+    // NOTE: Render texture must be y-flipped due to default OpenGL coordinates (left-bottom)
+    DrawTextureRec(target.texture, { 0, 0, (float)target.texture.width, (float)-target.texture.height }, { 0, 0 }, WHITE);
+    EndShaderMode();
 }       
 
 
@@ -35,14 +46,10 @@ void Gam150::Draw() {
 void Gam150::Update([[maybe_unused]] double dt) {
     Mode7::Update();
     
-    if (IsKeyReleased(KEY_U)) drawmode = 1;
-    if (IsKeyReleased(KEY_J)) drawmode = 0;
-    if (IsKeyReleased(KEY_SPACE) && TestMap::drawnRoadSegments < TestMap::Road_List.size() - 2)
-    {
-        TestMap::drawnRoadSegments += 2;
+    if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Escape)) {
+        Engine::GetLogger().LogEvent("Setting next state to Gam150");
+        Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::GameOver));
     }
-
-
 }
 
 

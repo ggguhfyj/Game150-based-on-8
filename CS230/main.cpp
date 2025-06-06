@@ -17,6 +17,9 @@ Created:    March 8, 2023
 #include "Game/Mode2.h"
 #include "Game/MainMenu.h"
 #include "Game\Gam150.h"
+#include "Game/Setting.h"
+#include "Game/GameOver.h"
+
 int main() {
     try {
         Engine& engine = Engine::Instance();
@@ -35,6 +38,10 @@ int main() {
         engine.GetGameStateManager().AddGameState(mode2);
         Gam150 gam150;
         engine.GetGameStateManager().AddGameState(gam150);
+        Setting setting;
+        engine.GetGameStateManager().AddGameState(setting);
+        GameOver gameover;
+        engine.GetGameStateManager().AddGameState(gameover);
 
         while (engine.HasGameEnded() == false) {
             engine.Update();

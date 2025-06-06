@@ -1,5 +1,6 @@
 #include "Mode7.h"
 #include <cmath>
+
 //https://www.youtube.com/watch?v=0kVM6dJeWaY
 
 
@@ -10,7 +11,6 @@ Color Mode7::DrawFog(Color color)
     
     
     A+= 1;
-    
     
     
     Color fog = { (unsigned char)(BASE + R),(unsigned char)(BASE + G),(unsigned char)(BASE + B),(unsigned char)(BASE + A) };
@@ -60,6 +60,11 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
                     float drawy = blowup_scale * (windowsize.y / 2 + y) - trafficlightsTex.height * scale;
 
                     DrawTextureEx(trafficlightsTex, { drawx, drawy }, 0, scale, WHITE);
+                    if ((x * blowup_scale) > 550 && (x * blowup_scale) < 650)
+                        if ((blowup_scale * (windowsize.y / 2 + y)) > 750 && (blowup_scale * (windowsize.y / 2 + y)) < 800)
+                        {
+                            Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::GameOver));
+                        }
                     it.second.is_drawn = true;
                 }
             }
@@ -140,6 +145,11 @@ void Mode7::Load()
     imgMap = LoadImageFromTexture(texMap);
 
     fPlayerScreenX = (float)Engine::GetWindow().GetSize().x / 2;
+
+    sound_ski_skidding = LoadSound("Assets/ski_skidding.wav");
+    sound_ski_default = LoadMusicStream("Assets/ski_default.wav");
+    isSkiddingSoundPlaying = false;
+    PlayMusicStream(sound_ski_default);
 }
 void Mode7::Update()
 {
@@ -168,7 +178,7 @@ void Mode7::Update()
     }
 
     else {
-        if (fSpeed < 600) {
+        if (fSpeed < fMaxSpeed) {
             fSpeed += 10;
         }
         if (fRotationSpeed > 0.0f) {
@@ -237,6 +247,29 @@ void Mode7::Update()
     frustum.Near2.y = fWorldY + sinf(fWorldA + fFoVHalf) * fNear;
 
     skyOffset = (float)fmod(skyOffset, texSky.width);
+
+    SetMusicVolume(sound_ski_default, musicVolume);
+    SetSoundVolume(sound_ski_skidding, soundVolume);
+
+    UpdateMusicStream(sound_ski_default);
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
+        if (!isSkiddingSoundPlaying) {
+            PlaySound(sound_ski_skidding);
+            isSkiddingSoundPlaying = true;
+            Engine::GetLogger().LogEvent("playing music now");
+        }
+    }
+    else {
+        isSkiddingSoundPlaying = false;
+    }
+    float base_speed = 600.0f;
+    float speed_multiplier = 1.0f;
+    switch (current_difficulty) {
+    case Difficulty::Easy: speed_multiplier = 0.7f; break;
+    case Difficulty::Normal: speed_multiplier = 1.0f; break;
+    case Difficulty::Hard: speed_multiplier = 1.5f; break;
+    }
+    fMaxSpeed = base_speed * speed_multiplier;
 }
 void Mode7::Draw()
 {
@@ -267,6 +300,10 @@ void Mode7::unload()
     UnloadTexture(texSky);
     UnloadTexture(texMap);
     UnloadImage(imgMap);
+
+    UnloadSound(sound_ski_skidding);
+    StopMusicStream(sound_ski_default);
+    UnloadMusicStream(sound_ski_default);
 }
 void Mode7::DrawPlayer()
 {
@@ -298,5 +335,17 @@ void Mode7::DrawPlayer()
         0, 
         scale,
         WHITE);*/
+}
+
+void Mode7::SetVolume(float volume)
+{
+    musicVolume = volume;
+    soundVolume = volume;
+    SetMusicVolume(sound_ski_default, musicVolume);
+    SetSoundVolume(sound_ski_skidding, soundVolume);
+}
+
+void Mode7::SetDifficulty(Difficulty diff) {
+    current_difficulty = diff;
 }
 

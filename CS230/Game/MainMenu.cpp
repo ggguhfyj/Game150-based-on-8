@@ -46,22 +46,14 @@ void MainMenu::Update([[maybe_unused]] double dt) {
         Engine::GetLogger().LogEvent("Menu Enter: Confirmed " + std::to_string(current_select));
         switch (current_select) {
         case 0: 
-            
-            Engine::GetLogger().LogEvent("Setting next state to Mode1 (SideScroller)");
-            Engine::GetGameStateManager().SetNextGameState(static_cast<int>(2));
+            Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::Gam150));
             break;
-        case 1: // SpaceShooter
-            Engine::GetLogger().LogEvent("Setting next state to Mode2 (SpaceShooter)");
-            Engine::GetGameStateManager().SetNextGameState(static_cast<int>(3));
+        case 1:
+            Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::Setting));
             break;
         case 2: 
            
-            Engine::GetGameStateManager().ClearNextGameState(); //exit game
-            break;
-
-        case 3: // SpaceShooter
-            Engine::GetLogger().LogEvent("Setting next state to Gam150");
-            Engine::GetGameStateManager().SetNextGameState(static_cast<int>(4));
+            Engine::GetGameStateManager().ClearNextGameState();
             break;
         }
 
@@ -104,10 +96,9 @@ void MainMenu::UpdateMenuItemTexture(int index) {
 
     std::string menu_item_text;
     switch (index) {
-    case 0: menu_item_text = "Side"; break; 
-    case 1: menu_item_text = "Space"; break; 
+    case 0: menu_item_text = "Start"; break; 
+    case 1: menu_item_text = "Setting"; break; 
     case 2: menu_item_text = "EXIT"; break;     
-    case 3: menu_item_text = "game150"; break;
     }
 
     unsigned int color = (index == current_select) ? MAINMENU_SELECTED_ITEM_COLOR : MAINMENU_UNSELECTED_ITEM_COLOR;

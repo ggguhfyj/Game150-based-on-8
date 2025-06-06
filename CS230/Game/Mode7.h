@@ -5,6 +5,8 @@
 #include "mapGen.h"
 #include "..\Game\newmapGen.h"
 #include "..\Engine\Window.h"
+#include "Setting.h"
+#include "..\Game\States.h"
 class Mode7 {
 
 private:
@@ -28,7 +30,7 @@ private:
 	//static inline float fFoVHalf = PI / 4.0f;
 	static inline float fFoVHalf = 1.3f;
 	static inline float fSpeed = 200.0f;
-	static inline float fMaxSpeed = 300.0f;
+	static inline float fMaxSpeed = 600.0f;
 	static inline float fStartSpeed = 0.0f;
 	static inline float skyOffset = 0.0f;
 
@@ -74,11 +76,19 @@ private:
 	static inline float fPlayerHDamping = 200.0f; // Damping for horizontal movement
 	static inline float fMaxPlayerHSpeed = 200.0f;// Maximum horizontal speed for the player
 
+	static inline Sound sound_ski_skidding;
+	static inline Music sound_ski_default;
+	static inline bool isSkiddingSoundPlaying;
+	static inline float musicVolume = 1.0;
+	static inline float soundVolume = 1.0;
 
+	static inline Difficulty current_difficulty = Difficulty::Normal;
 public:
 	static void Load();
 	static void Update();
 	static void Draw();
 	static void unload();
 	static void DrawPlayer();
+	static void SetVolume(float volume);
+	static void SetDifficulty(Difficulty diff);
 };

@@ -46,6 +46,9 @@ private:
         mode7
 
     };
+    RenderTexture2D target;
+    Shader fish;
+    Shader scanlines;
     int drawmode = 1;
     CS230::Texture* timer_texture; // default constructor errors
     double timer;

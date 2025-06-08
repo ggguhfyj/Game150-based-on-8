@@ -57,8 +57,14 @@ void newMapGen::generatesnowTexture()
 
 	EndTextureMode();
 
-	Image image = LoadImageFromTexture(target.texture);
+	image = LoadImageFromTexture(target.texture);
 	ExportImage(image, "CreatedMap.png");
+}
+
+void newMapGen::UnloadTexture()
+{
+	mapsprites.clear();
+	UnloadImage(image);
 }
 
 //void newMapGen::drawFallingSnow()

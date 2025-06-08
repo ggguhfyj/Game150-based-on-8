@@ -10,7 +10,7 @@
 class Mode7 {
 
 private:
-	struct Frustum 
+	struct Frustum
 	{
 		Vector2 Far1;
 		Vector2 Far2;
@@ -21,7 +21,7 @@ private:
 	static inline float fRotationAccel = 6.0f;
 	static inline float fRotationDamping = 2.0f;
 	static inline float fMaxRotationSpeed = 1.8f;
-	
+
 	static inline float fWorldX = 0.0f;
 	static inline float fWorldY = 0.0f;
 	static inline float fWorldA = 0.0f;
@@ -76,9 +76,13 @@ private:
 	static inline float fPlayerHDamping = 200.0f; // Damping for horizontal movement
 	static inline float fMaxPlayerHSpeed = 200.0f;// Maximum horizontal speed for the player
 
+	static inline Sound sound_close_call;
 	static inline Sound sound_ski_skidding;
 	static inline Music sound_ski_default;
+	static inline Music sound_wind;
 	static inline bool isSkiddingSoundPlaying;
+	static inline bool close_call_playing;
+	static inline bool windPlaying;
 	static inline float musicVolume = 1.0;
 	static inline float soundVolume = 1.0;
 

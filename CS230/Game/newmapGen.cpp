@@ -1,6 +1,4 @@
 #include "newmapGen.h"
-#include "Setting.h"
-#include "Mode7.h"
 
 void newMapGen::LoadTextures()
 {
@@ -15,33 +13,14 @@ void newMapGen::LoadTextures()
 
 void newMapGen::generatesnowTexture()
 {
-	mapsprites.clear();
 	RenderTexture2D target = LoadRenderTexture(2000, 2000);
 	BeginTextureMode(target);
 	
 	//int ichasm_1 = GetRandomValue(3, 7);
-	int itree_1;
-	int itree_2;
-
-	switch (Mode7::current_difficulty) {
-		case Difficulty::Easy:
-			itree_1 = GetRandomValue(1, 4);
-			itree_2 = GetRandomValue(1, 4);
-			break;
-		case Difficulty::Normal:
-			itree_1 = GetRandomValue(3, 7);
-			itree_2 = GetRandomValue(3, 7);
-			break;
-		case Difficulty::Hard:
-			itree_1 = GetRandomValue(5, 10);
-			itree_2 = GetRandomValue(5, 10);
-			break;
-		default:
-			itree_1 = GetRandomValue(3, 7);
-			itree_2 = GetRandomValue(3, 7);
-			break;
-	}
+	int itree_1 =  GetRandomValue(3, 7);
 	//int ipole_1 = GetRandomValue(3, 7);
+	int itree_2 = GetRandomValue(3, 7);
+	int pill1 = GetRandomValue (1,3);
 	
 	DrawTexture(snow_texture,0,0,WHITE);
 
@@ -58,7 +37,14 @@ void newMapGen::generatesnowTexture()
 		DrawTextureV(shadow_for_tree2_tex, { (float)textureposition.x,(float)textureposition.y }, WHITE);
 		mapsprites.insert({ textureposition, { tree2,false } });
 
-	}/*
+	}
+	for (int i = 0; i < pill1; i++)
+	{
+		Math::vec2 textureposition = { (float)GetRandomValue(50,1950),(float)GetRandomValue(50,1950) };
+
+		mapsprites.insert({ textureposition, { pill,false } });
+	}
+	/*
 	for (int i = 0; i < ipole_1;i++)
 	{
 		Math::vec2 textureposition = { (float)GetRandomValue(50,1950),(float)GetRandomValue(50,1950) };
@@ -79,8 +65,14 @@ void newMapGen::generatesnowTexture()
 
 	EndTextureMode();
 
-	Image image = LoadImageFromTexture(target.texture);
+	image = LoadImageFromTexture(target.texture);
 	ExportImage(image, "CreatedMap.png");
+}
+
+void newMapGen::UnloadTexture()
+{
+	mapsprites.clear();
+	UnloadImage(image);
 }
 
 //void newMapGen::drawFallingSnow()

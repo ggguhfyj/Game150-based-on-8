@@ -6,12 +6,12 @@
 #include "..\Game\newmapGen.h"
 #include "..\Engine\Window.h"
 #include "Setting.h"
+#include "..\Game\States.h"
 #include "../Engine/Timer.h"
-#include "States.h"
-
 class Mode7 {
+
 private:
-	struct Frustum 
+	struct Frustum
 	{
 		Vector2 Far1;
 		Vector2 Far2;
@@ -22,13 +22,9 @@ private:
 	static inline float fRotationAccel = 6.0f;
 	static inline float fRotationDamping = 2.0f;
 	static inline float fMaxRotationSpeed = 1.8f;
-	
-	//Pill
+
 	static inline bool pill_used = false;
 	static inline CS230::Timer pill_timer = CS230::Timer(0.0);
-	//score
-	static inline float nowX = 0.0f;
-	static inline float nowY = 0.0f;
 
 	static inline float fWorldX = 0.0f;
 	static inline float fWorldY = 0.0f;
@@ -52,6 +48,7 @@ private:
 	static inline Texture2D player[6];
 	static inline Texture2D BWplayer[6];
 	static inline Texture2D VPplayer[6];
+	static inline Texture2D pill;
 
 	static inline Texture2D FovplayerRight[18];
 	static inline Texture2D FovplayerLeft[18];
@@ -84,14 +81,17 @@ private:
 	static inline float fPlayerHDamping = 200.0f; // Damping for horizontal movement
 	static inline float fMaxPlayerHSpeed = 200.0f;// Maximum horizontal speed for the player
 
+	static inline Sound sound_close_call;
 	static inline Sound sound_ski_skidding;
 	static inline Music sound_ski_default;
 	static inline Music sound_wind;
 	static inline bool isSkiddingSoundPlaying;
+	static inline bool close_call_playing;
 	static inline bool windPlaying;
 	static inline float musicVolume = 1.0;
 	static inline float soundVolume = 1.0;
 
+	static inline Difficulty current_difficulty = Difficulty::Normal;
 public:
 	static void Load();
 	static void Update();
@@ -100,7 +100,4 @@ public:
 	static void DrawPlayer();
 	static void SetVolume(float volume);
 	static void SetDifficulty(Difficulty diff);
-	static inline Difficulty current_difficulty = Difficulty::Normal;
-	static inline int score;
-
 };

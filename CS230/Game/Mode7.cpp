@@ -1,5 +1,6 @@
 #include "Mode7.h"
 #include <cmath>
+
 //https://www.youtube.com/watch?v=0kVM6dJeWaY
 
 
@@ -7,15 +8,15 @@
 
 Color Mode7::DrawFog(Color color)
 {
-    
-    
-    A+= 1;
-    
-    
+
+
+    A += 1;
+
+
     Color fog = { (unsigned char)(BASE + R),(unsigned char)(BASE + G),(unsigned char)(BASE + B),(unsigned char)(BASE + A) };
 
     Color fogcolor = ColorTint(color, fog);
-        
+
     return fogcolor;
 }
 void Mode7::DrawMode7Line(int y) //y doesnt skip
@@ -27,24 +28,23 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
     else {
         slope_factor = 1.0f;
     }
-
-    float fSampleDepth = (float) y / (windowsize.y / 2.0f); 
+    float fSampleDepth = (float)y / (windowsize.y / 2.0f);
 
     float fStartX = (frustum.Far1.x - frustum.Near1.x) / (fSampleDepth)+frustum.Near1.x;
     float fStartY = (frustum.Far1.y - frustum.Near1.y) / (fSampleDepth)+frustum.Near1.y;
     float fEndX = (frustum.Far2.x - frustum.Near2.x) / (fSampleDepth)+frustum.Near2.x;
     float fEndY = (frustum.Far2.y - frustum.Near2.y) / (fSampleDepth)+frustum.Near2.y;
-    
+
 
     for (int x = 0; x < windowsize.x; x++) {
-        
+
         float fSampleWidth = (float)x / windowsize.x;
         float fSampleX = (fEndX - fStartX) * fSampleWidth + fStartX;
         float fSampleY = (fEndY - fStartY) * fSampleWidth + fStartY;
         int texX = ((int)fSampleX % texMap.width + texMap.width) % texMap.width;
         int texY = ((int)fSampleY % texMap.height + texMap.height) % texMap.height;
         Color color = GetImageColor(imgMap, texX, texY);
-        
+
         Color fogcolor = color;
 
         //DrawRectangle((int)position.x + x * blowup_scale, (int)position.y + blowup_scale * ((int)windowsize.y / 2 + y), blowup_scale, blowup_scale, Mode7::DrawFog(color));
@@ -65,13 +65,45 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
 
                     float drawx = (float)(x * blowup_scale) - (trafficlightsTex.width * scale / 2.0f);
                     float drawy = blowup_scale * (windowsize.y / 2 + y) - trafficlightsTex.height * scale;
-
-                    DrawTextureEx(trafficlightsTex, { drawx, drawy }, 0, scale, WHITE);
-                    if ((x * blowup_scale) > 550 && (x * blowup_scale) < 650)
-                        if ((blowup_scale * (windowsize.y / 2 + y)) > 750 && (blowup_scale * (windowsize.y / 2 + y)) < 800)
+                    if (it.second.sprite == newMapGen::spritetype::pill) {
+                        drawx = (float)(x * blowup_scale) - (pill.width * scale / 2.0f);
+                        drawy = blowup_scale * (windowsize.y / 2 + y) - pill.height * scale;
+                        DrawTextureEx(pill, { drawx, drawy }, 0, scale, WHITE);
+                    }
+                    else {
+                        DrawTextureEx(trafficlightsTex, { drawx, drawy }, 0, scale, WHITE);
+                    }
+                    
+                    if ((blowup_scale * (windowsize.y / 2 + y)) > 750 && (blowup_scale * (windowsize.y / 2 + y)) < 800)
+                    {
+                        if ((x * blowup_scale) > 550 && (x * blowup_scale) < 650)
                         {
-                            Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::GameOver));
+                    
+                        Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::GameOver));
                         }
+                        
+                    }
+                    //if ((blowup_scale * (windowsize.y / 2 + y)) > 650 && (blowup_scale * (windowsize.y / 2 + y)) < 00)
+                    //if (((x * blowup_scale) > -50) && ((x * blowup_scale) < 1250))
+                    //{
+                    //    if (!close_call_playing)
+                    //    {
+                    //        //this is happening way too much causing lag spikes
+                    //        float centerX = windowsize.x * blowup_scale / 2.0f;
+                    //        float distanceFromCenter = abs(x * blowup_scale - centerX);
+                    //        float maxDistance = windowsize.x * blowup_scale / 2.0f;
+
+                    //        float volume = 1.0f - (distanceFromCenter / maxDistance) * 0.9f;
+                    //        volume = fmax(0.1f, volume);
+
+                    //        SetSoundVolume(sound_close_call, volume);
+                    //        PlaySound(sound_close_call);
+                    //        close_call_playing = true;
+                    //        Engine::GetLogger().LogEvent("playing close call music now");
+                    //    }
+                    //    
+
+                    //}
                     it.second.is_drawn = true;
                 }
             }
@@ -81,15 +113,12 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
 
 void Mode7::Load()
 {
-    score = 0;
-    pill_used = false;
-    nowX = fWorldX;
-    nowY = fWorldY;
     texSky = LoadTexture("Assets/Sky.png");
 
     texMap = LoadTexture("CreatedMap.png");
     windowtabs = LoadTexture("Assets/windowtabs.png");
     trafficlightsTex = LoadTexture("Assets/tree/dithered-image(2).png");
+    pill = LoadTexture("Assets/pill.png");
     player[0] = LoadTexture("Assets/Player/PlayerLeft-1.png");
     player[1] = LoadTexture("Assets/Player/PlayerLeft-2.png");
     player[2] = LoadTexture("Assets/Player/PlayerLeft-3.png");
@@ -112,16 +141,16 @@ void Mode7::Load()
     trees[1] = LoadTexture("Assets/tree/dithered-image(1).png");
     trees[2] = LoadTexture("Assets/tree/dithered-image(2).png");
 
-    FovplayerRight[0]  = LoadTexture("Assets/Player/POV/Right hand/1.png");
-    FovplayerRight[1]  = LoadTexture("Assets/Player/POV/Right hand/2.png");
-    FovplayerRight[2]  = LoadTexture("Assets/Player/POV/Right hand/3.png");
-    FovplayerRight[3]  = LoadTexture("Assets/Player/POV/Right hand/4.png");
-    FovplayerRight[4]  = LoadTexture("Assets/Player/POV/Right hand/5.png");
-    FovplayerRight[5]  = LoadTexture("Assets/Player/POV/Right hand/6.png");
-    FovplayerRight[6]  = LoadTexture("Assets/Player/POV/Right hand/7.png");
-    FovplayerRight[7]  = LoadTexture("Assets/Player/POV/Right hand/8.png");
-    FovplayerRight[8]  = LoadTexture("Assets/Player/POV/Right hand/9.png");
-    FovplayerRight[9]  = LoadTexture("Assets/Player/POV/Right hand/10.png");
+    FovplayerRight[0] = LoadTexture("Assets/Player/POV/Right hand/1.png");
+    FovplayerRight[1] = LoadTexture("Assets/Player/POV/Right hand/2.png");
+    FovplayerRight[2] = LoadTexture("Assets/Player/POV/Right hand/3.png");
+    FovplayerRight[3] = LoadTexture("Assets/Player/POV/Right hand/4.png");
+    FovplayerRight[4] = LoadTexture("Assets/Player/POV/Right hand/5.png");
+    FovplayerRight[5] = LoadTexture("Assets/Player/POV/Right hand/6.png");
+    FovplayerRight[6] = LoadTexture("Assets/Player/POV/Right hand/7.png");
+    FovplayerRight[7] = LoadTexture("Assets/Player/POV/Right hand/8.png");
+    FovplayerRight[8] = LoadTexture("Assets/Player/POV/Right hand/9.png");
+    FovplayerRight[9] = LoadTexture("Assets/Player/POV/Right hand/10.png");
     FovplayerRight[10] = LoadTexture("Assets/Player/POV/Right hand/11.png");
     FovplayerRight[11] = LoadTexture("Assets/Player/POV/Right hand/12.png");
     FovplayerRight[12] = LoadTexture("Assets/Player/POV/Right hand/13.png");
@@ -130,18 +159,18 @@ void Mode7::Load()
     FovplayerRight[15] = LoadTexture("Assets/Player/POV/Right hand/16.png");
     FovplayerRight[16] = LoadTexture("Assets/Player/POV/Right hand/17.png");
     FovplayerRight[17] = LoadTexture("Assets/Player/POV/Right hand/18.png");
-   
 
-    FovplayerLeft[0]  = LoadTexture("Assets/Player/POV/Left hand/1.png");
-    FovplayerLeft[1]  = LoadTexture("Assets/Player/POV/Left hand/2.png");
-    FovplayerLeft[2]  = LoadTexture("Assets/Player/POV/Left hand/3.png");
-    FovplayerLeft[3]  = LoadTexture("Assets/Player/POV/Left hand/4.png");
-    FovplayerLeft[4]  = LoadTexture("Assets/Player/POV/Left hand/5.png");
-    FovplayerLeft[5]  = LoadTexture("Assets/Player/POV/Left hand/6.png");
-    FovplayerLeft[6]  = LoadTexture("Assets/Player/POV/Left hand/7.png");
-    FovplayerLeft[7]  = LoadTexture("Assets/Player/POV/Left hand/8.png");
-    FovplayerLeft[8]  = LoadTexture("Assets/Player/POV/Left hand/9.png");
-    FovplayerLeft[9]  = LoadTexture("Assets/Player/POV/Left hand/10.png");
+
+    FovplayerLeft[0] = LoadTexture("Assets/Player/POV/Left hand/1.png");
+    FovplayerLeft[1] = LoadTexture("Assets/Player/POV/Left hand/2.png");
+    FovplayerLeft[2] = LoadTexture("Assets/Player/POV/Left hand/3.png");
+    FovplayerLeft[3] = LoadTexture("Assets/Player/POV/Left hand/4.png");
+    FovplayerLeft[4] = LoadTexture("Assets/Player/POV/Left hand/5.png");
+    FovplayerLeft[5] = LoadTexture("Assets/Player/POV/Left hand/6.png");
+    FovplayerLeft[6] = LoadTexture("Assets/Player/POV/Left hand/7.png");
+    FovplayerLeft[7] = LoadTexture("Assets/Player/POV/Left hand/8.png");
+    FovplayerLeft[8] = LoadTexture("Assets/Player/POV/Left hand/9.png");
+    FovplayerLeft[9] = LoadTexture("Assets/Player/POV/Left hand/10.png");
     FovplayerLeft[10] = LoadTexture("Assets/Player/POV/Left hand/11.png");
     FovplayerLeft[11] = LoadTexture("Assets/Player/POV/Left hand/12.png");
     FovplayerLeft[12] = LoadTexture("Assets/Player/POV/Left hand/13.png");
@@ -157,14 +186,15 @@ void Mode7::Load()
 
     fPlayerScreenX = (float)Engine::GetWindow().GetSize().x / 2;
 
+    sound_close_call = LoadSound("Assets/close_call.wav");
     sound_ski_skidding = LoadSound("Assets/ski_skidding.wav");
     sound_ski_default = LoadMusicStream("Assets/ski_default.wav");
     sound_wind = LoadMusicStream("Assets/wind_.wav");
     isSkiddingSoundPlaying = false;
+    close_call_playing = false;
     windPlaying = false;
     PlayMusicStream(sound_ski_default);
     PlayMusicStream(sound_wind);
-    windPlaying = true;
 }
 void Mode7::Update()
 {
@@ -181,11 +211,11 @@ void Mode7::Update()
 
     if (IsKeyDown(KEY_X)) fFoVHalf -= 0.1f * GetFrameTime();
 
-  
+
     if (IsKeyPressed(KEY_RIGHT)) {
         playersprites = 0;
         right = true;
-        
+
     }
     else if (IsKeyPressed(KEY_LEFT)) {
         playersprites = 0;
@@ -196,9 +226,9 @@ void Mode7::Update()
         if (fSpeed < fMaxSpeed) {
             fSpeed += 10;
         }
-        if (fSpeed >= fMaxSpeed - 10) {
-            SetMusicVolume(sound_wind, musicVolume*2);
-            Engine::GetLogger().LogEvent("playing music now");
+        if (fSpeed >= fMaxSpeed - 10) {//sound volume stuff
+
+            SetMusicVolume(sound_wind, musicVolume * 2);
         }
         if (fRotationSpeed > 0.0f) {
             fRotationSpeed -= fRotationDamping * GetFrameTime();
@@ -235,8 +265,8 @@ void Mode7::Update()
             fRotationSpeed = -fMaxRotationSpeed;
 
     }
-    
-    
+
+
     fWorldA += fRotationSpeed * GetFrameTime();
     skyOffset += 400.0f * fRotationSpeed * GetFrameTime();
 
@@ -249,7 +279,6 @@ void Mode7::Update()
         fWorldX -= cosf(fWorldA) * fSpeed * GetFrameTime();
         fWorldY -= sinf(fWorldA) * fSpeed * GetFrameTime();
     }
-
     if (pill_used == false && Engine::GetInput().KeyJustPressed(CS230::Input::Keys::E)) {
         pill_used = true;
         pill_timer.Reset(10.0);
@@ -282,20 +311,20 @@ void Mode7::Update()
     SetMusicVolume(sound_ski_default, musicVolume);
     SetSoundVolume(sound_ski_skidding, soundVolume);
 
+    if (close_call_playing && !IsSoundPlaying(sound_close_call)) {
+        close_call_playing = false;
+    }
+
     UpdateMusicStream(sound_ski_default);
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
         if (!isSkiddingSoundPlaying) {
-            PlaySound(sound_ski_skidding);
+            //PlaySound(sound_ski_skidding);
             isSkiddingSoundPlaying = true;
-            Engine::GetLogger().LogEvent("playing music now");
+            //Engine::GetLogger().LogEvent("playing music now");
         }
     }
     else {
         isSkiddingSoundPlaying = false;
-    }
-    UpdateMusicStream(sound_wind);
-    if (!IsMusicStreamPlaying(sound_wind) && windPlaying) {
-        PlayMusicStream(sound_wind);
     }
     float base_speed = 600.0f;
     float speed_multiplier = 1.0f;
@@ -305,24 +334,12 @@ void Mode7::Update()
     case Difficulty::Hard: speed_multiplier = 1.5f; break;
     }
     fMaxSpeed = base_speed * speed_multiplier;
-
-    float dx = fWorldX - nowX;
-    float dy = fWorldY - nowY;
-    float dist = sqrtf(dx * dx + dy * dy);
-    if (pill_used == false) {
-        score += static_cast<int>(dist / 15.0f);//score for 5
-    }
-    else {
-        score += static_cast<int>(dist / 10.0f);
-    }
-    nowX = fWorldX;
-    nowY = fWorldY;
 }
 void Mode7::Draw()
 {
     Rectangle skySource = { skyOffset, 0, (float)texSky.width, (float)texSky.height };
-    Rectangle skyDest = { position.x, position.y, windowsize.x*blowup_scale , windowsize.y/2 * blowup_scale };
-    
+    Rectangle skyDest = { position.x, position.y, windowsize.x * blowup_scale , windowsize.y / 2 * blowup_scale };
+
     DrawTexturePro(texSky, skySource, skyDest, { 0, 0 }, 0.0f, WHITE);
     for (int y = 0; y < windowsize.y / 2; y++) {
         DrawMode7Line(y);
@@ -331,21 +348,19 @@ void Mode7::Draw()
     DrawPlayer();
 
 
-    DrawText(TextFormat("Speed: %.1f",fSpeed),100,100,
+    DrawText(TextFormat("Speed: %.1f", fSpeed), 100, 100,
         20,
         YELLOW);
     DrawText(TextFormat("fov: %.1f", fFoVHalf), 100, 200,
         20,
         YELLOW);
-    DrawText(TextFormat("mousepos: %.1f, %.1f",GetMousePosition().x , GetMousePosition().y), 100, 300,
+    DrawText(TextFormat("mousepos: %.1f, %.1f", GetMousePosition().x, GetMousePosition().y), 100, 300,
         20,
         YELLOW);
-
     if (pill_used == true) {
         DrawText(TextFormat("pill time remaining : %.2f", pill_timer.GetTime()), 100, 400, 30, RED);
     }
     DrawFPS(500, 100);
-    DrawText(TextFormat("Score: %d", score), 100, 500, 30, YELLOW);
 }
 void Mode7::unload()
 {
@@ -354,13 +369,15 @@ void Mode7::unload()
     UnloadImage(imgMap);
 
     UnloadSound(sound_ski_skidding);
+    UnloadSound(sound_close_call);
     StopMusicStream(sound_ski_default);
     UnloadMusicStream(sound_ski_default);
     UnloadMusicStream(sound_wind);
+    newMapGen::UnloadTexture();
 }
 void Mode7::DrawPlayer()
 {
-   
+
     counter++;
 
     if (right)
@@ -372,7 +389,7 @@ void Mode7::DrawPlayer()
         }
         DrawTextureEx(FovplayerLeft[playersprites], { -600,110 }, 0, 2, WHITE);
     }
-    else 
+    else
     {
         if (playersprites < 18 && counter > 1)
         {
@@ -383,11 +400,11 @@ void Mode7::DrawPlayer()
     }
 
 
-   /* DrawTextureEx(VPplayer[playersprites], { (float)Engine::GetWindow().GetSize().x / 2 - ((VPplayer[playersprites].width / 2) / scale),
-        ((float)Engine::GetWindow().GetSize().y / 5 * 2) + (VPplayer[playersprites].height / 2) / scale },
-        0, 
-        scale,
-        WHITE);*/
+    /* DrawTextureEx(VPplayer[playersprites], { (float)Engine::GetWindow().GetSize().x / 2 - ((VPplayer[playersprites].width / 2) / scale),
+         ((float)Engine::GetWindow().GetSize().y / 5 * 2) + (VPplayer[playersprites].height / 2) / scale },
+         0,
+         scale,
+         WHITE);*/
 }
 
 void Mode7::SetVolume(float volume)
@@ -396,10 +413,10 @@ void Mode7::SetVolume(float volume)
     soundVolume = volume;
     SetMusicVolume(sound_ski_default, musicVolume);
     SetSoundVolume(sound_ski_skidding, soundVolume);
+    SetSoundVolume(sound_close_call, soundVolume);
     SetMusicVolume(sound_wind, musicVolume);
 }
 
 void Mode7::SetDifficulty(Difficulty diff) {
     current_difficulty = diff;
 }
-

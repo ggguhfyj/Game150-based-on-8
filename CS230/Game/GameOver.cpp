@@ -9,8 +9,7 @@ GameOver::GameOver()
 void GameOver::Load()
 {
     gameover_texture = Engine::GetFont(static_cast<int>(Fonts::Outlined)).PrintToTexture("Game Over", GAMEOVER_TITLE_COLOR);
-    score_texture = Engine::GetFont(static_cast<int>(Fonts::Simple)).PrintToTexture("Score: " + std::to_string(Mode7::score), GAMEOVER_SCORE_COLOR);
-    Mode7::Load();
+    score_texture = Engine::GetFont(static_cast<int>(Fonts::Simple)).PrintToTexture("Score: " + std::to_string(score), GAMEOVER_SCORE_COLOR);
 }
 
 void GameOver::Unload()

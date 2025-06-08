@@ -69,6 +69,9 @@ void Setting::Update([[maybe_unused]] double dt) {
             Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::MainMenu));
         }
     }
+    if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Escape)) {
+        Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::Gam150));
+    }
 
     if (outdated_menu) {
         UpdateAllMenuItemTextures();

@@ -46,6 +46,11 @@ private:
         mode7
 
     };
+    RenderTexture2D target;
+    Shader fish;
+    Shader scanlines;
+    Shader downhillShader; // <--- Add this
+    float hillFactor;
     int drawmode = 1;
     CS230::Texture* timer_texture; // default constructor errors
     double timer;

@@ -23,15 +23,18 @@ namespace std
 
 
 class newMapGen {
+public:
 	enum spritetype {
 		tree1,
 		tree2,
 		rails,
 		pole,
 		human,
-		chasm
+		chasm,
+		pill
 
 	};
+private:
 	struct value {
 		spritetype sprite;
 		bool is_drawn;
@@ -42,11 +45,12 @@ class newMapGen {
 	static inline Texture2D chasm_tex;
 	static inline Texture2D shadow_for_pole_tex;
 	static inline Texture2D snow_texture;
-	
+	static inline Image image;
 public:
 	
 	static void LoadTextures();
 	static void generatesnowTexture();
+	static void UnloadTexture();
 	//static  void drawFallingSnow();
 	//static  bool is_in_buffer(int x, int y);
 	

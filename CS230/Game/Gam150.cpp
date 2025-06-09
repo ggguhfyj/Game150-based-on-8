@@ -29,20 +29,14 @@ void Gam150::Load() {
 }
 
 void Gam150::Draw() {
-    // 1. Draw the 3D scene to a texture
     BeginTextureMode(target);
     Engine::GetWindow().Clear(0x222222FF);
     Mode7::Draw();
     EndTextureMode();
 
-    // 2. Draw the texture to the screen, applying the downhill shader
     BeginShaderMode(downhillShader);
-    // Get the location of the "hillFactor" uniform in the shader
     int hillFactorLoc = GetShaderLocation(downhillShader, "hillFactor");
-    // Send the value of our hillFactor variable to the shader
     SetShaderValue(downhillShader, hillFactorLoc, &hillFactor, SHADER_UNIFORM_FLOAT);
-
-    // Draw the rendered texture. It's flipped vertically to match OpenGL's coordinate system.
     DrawTextureRec(target.texture, { 0, 0, (float)target.texture.width, (float)-target.texture.height }, { 0, 0 }, WHITE);
     EndShaderMode();
 }
@@ -51,7 +45,6 @@ void Gam150::Draw() {
 void Gam150::Update([[maybe_unused]] double dt) {
     Mode7::Update();
 
-    // Allow changing the hillFactor for testing purposes
     if (Engine::GetInput().KeyDown(CS230::Input::Keys::I)) {
         hillFactor += 0.1f * (float)dt;
         if (hillFactor > 1.0f) hillFactor = 1.0f;

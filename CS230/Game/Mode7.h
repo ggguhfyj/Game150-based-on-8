@@ -28,7 +28,7 @@ private:
 	static inline float fNear = -171;
 	static inline float fFar = 28;
 	//static inline float fFoVHalf = PI / 4.0f;
-	static inline float fFoVHalf = 1.3f;
+	static inline float fFoVHalf = 1.45f;
 	static inline float fSpeed = 200.0f;
 	static inline float fMaxSpeed = 600.0f;
 	static inline float fStartSpeed = 0.0f;

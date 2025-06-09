@@ -65,7 +65,7 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
 
                     float drawx = (float)(x * blowup_scale) - (trafficlightsTex.width * scale / 2.0f);
                     float drawy = blowup_scale * (windowsize.y / 2 + y) - trafficlightsTex.height * scale;
-                    if (it.second.sprite == newMapGen::spritetype::pill) {
+                    if (it.second.sprite == newMapGen::spritetype::pill && pill_get == false && pill_timer.GetTime() == 0) {
                         drawx = (float)(x * blowup_scale) - (pill.width * scale / 2.0f);
                         drawy = blowup_scale * (windowsize.y / 2 + y) - pill.height * scale;
                         DrawTextureEx(pill, { drawx, drawy }, 0, scale, WHITE);
@@ -74,14 +74,40 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
                         DrawTextureEx(trafficlightsTex, { drawx, drawy }, 0, scale, WHITE);
                     }
                     
-                    if ((blowup_scale * (windowsize.y / 2 + y)) > 750 && (blowup_scale * (windowsize.y / 2 + y)) < 800)
-                    {
-                        if ((x * blowup_scale) > 550 && (x * blowup_scale) < 650)
+                    if ((x * blowup_scale) > 550 && (x * blowup_scale) < 650)
+                        if ((blowup_scale * (windowsize.y / 2 + y)) > 750 && (blowup_scale * (windowsize.y / 2 + y)) < 800)
                         {
-                    
-                        Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::GameOver));
+                            if (it.second.sprite == newMapGen::spritetype::pill && pill_get == false) {
+                                pill_get = true;
+                            }
+                            if (it.second.sprite == newMapGen::spritetype::tree1 || 
+                                it.second.sprite == newMapGen::spritetype::tree2) {
+                                Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::GameOver));
+                            }
                         }
-                        
+                    if (blowup_scale * (windowsize.y / 2 + y) > 700 && blowup_scale * (windowsize.y / 2 + y) < 850) {
+                        if (!close_call_playing) {
+                            if (it.second.sprite == newMapGen::spritetype::tree1 ||
+                                it.second.sprite == newMapGen::spritetype::tree2) {
+                                score += 1;
+                                if (pill_used) {
+                                    score += 2;
+                                }
+                            }
+                            
+                            float centerX = windowsize.x * blowup_scale / 2.0f;
+                            float distanceFromCenter = abs(x * blowup_scale - centerX);
+                            float maxDistance = windowsize.x * blowup_scale / 2.0f;
+
+                            float volume = 1.0f - (distanceFromCenter / maxDistance) * 0.9f;
+                            volume = fmax(0.1f, volume);
+
+                            SetSoundVolume(sound_close_call, volume);
+                            PlaySound(sound_close_call);
+                            close_call_playing = true;
+                            Engine::GetLogger().LogEvent("playing close call music now");
+                        }
+                    }
                     }
                     //if ((blowup_scale * (windowsize.y / 2 + y)) > 650 && (blowup_scale * (windowsize.y / 2 + y)) < 00)
                     //if (((x * blowup_scale) > -50) && ((x * blowup_scale) < 1250))
@@ -109,7 +135,6 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
             }
         }
     }
-}
 
 void Mode7::Load()
 {
@@ -266,6 +291,9 @@ void Mode7::Update()
 
     }
 
+    if (score == 10) {
+        SetDifficulty(static_cast<Difficulty>(static_cast<int>(current_difficulty) + 1));
+    }
 
     fWorldA += fRotationSpeed * GetFrameTime();
     skyOffset += 400.0f * fRotationSpeed * GetFrameTime();
@@ -281,6 +309,7 @@ void Mode7::Update()
     }
     if (pill_used == false && Engine::GetInput().KeyJustPressed(CS230::Input::Keys::E)) {
         pill_used = true;
+        pill_get = false;
         pill_timer.Reset(10.0);
     }
     if (pill_used == true) {
@@ -318,7 +347,7 @@ void Mode7::Update()
     UpdateMusicStream(sound_ski_default);
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
         if (!isSkiddingSoundPlaying) {
-            //PlaySound(sound_ski_skidding);
+            PlaySound(sound_ski_skidding);
             isSkiddingSoundPlaying = true;
             //Engine::GetLogger().LogEvent("playing music now");
         }
@@ -357,9 +386,11 @@ void Mode7::Draw()
     DrawText(TextFormat("mousepos: %.1f, %.1f", GetMousePosition().x, GetMousePosition().y), 100, 300,
         20,
         YELLOW);
+    DrawText(TextFormat("Pill : %s", pill_get ? "ture" : "false"), GetScreenWidth() - 400, 20, 50, RED);
     if (pill_used == true) {
         DrawText(TextFormat("pill time remaining : %.2f", pill_timer.GetTime()), 100, 400, 30, RED);
     }
+    DrawText(TextFormat("score : %d", score), 100, 700, 30, RED);
     DrawFPS(500, 100);
 }
 void Mode7::unload()

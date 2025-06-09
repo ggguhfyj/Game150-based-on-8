@@ -23,8 +23,7 @@ private:
 	static inline float fRotationDamping = 2.0f;
 	static inline float fMaxRotationSpeed = 1.8f;
 
-	static inline bool pill_used = false;
-	static inline CS230::Timer pill_timer = CS230::Timer(0.0);
+	static inline bool pill_get = false;
 
 	static inline float fWorldX = 0.0f;
 	static inline float fWorldY = 0.0f;
@@ -90,8 +89,6 @@ private:
 	static inline bool windPlaying;
 	static inline float musicVolume = 1.0;
 	static inline float soundVolume = 1.0;
-
-	static inline Difficulty current_difficulty = Difficulty::Normal;
 public:
 	static void Load();
 	static void Update();
@@ -100,4 +97,8 @@ public:
 	static void DrawPlayer();
 	static void SetVolume(float volume);
 	static void SetDifficulty(Difficulty diff);
+	static inline int score = 0;
+	static inline Difficulty current_difficulty = Difficulty::Normal;
+	static inline bool pill_used = false;
+	static inline CS230::Timer pill_timer = CS230::Timer(0.0);
 };

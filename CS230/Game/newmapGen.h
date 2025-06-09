@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <iostream>
 #include <memory> // fot std::hash
+#include "Mode7.h"
+
 namespace std
 {
 	template <>
@@ -38,7 +40,6 @@ private:
 	struct value {
 		spritetype sprite;
 		bool is_drawn;
-
 	};
 	static inline Texture2D shadow_for_tree1_tex;
 	static inline Texture2D shadow_for_tree2_tex;

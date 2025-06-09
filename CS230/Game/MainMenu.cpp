@@ -24,6 +24,7 @@ void MainMenu::Load() {
     title_texture = Engine::GetFont(static_cast<int>(Fonts::Outlined)).PrintToTexture("CS230 Engine Test", MAINMENU_TITLE_COLOR);
 
     UpdateAllMenuItemTextures(); 
+    TextureUpdate();
     outdated_menu = false;         
 
     counter = 0.0; 
@@ -56,22 +57,29 @@ void MainMenu::Update([[maybe_unused]] double dt) {
             Engine::GetGameStateManager().ClearNextGameState();
             break;
         }
-
-        
     }
 
     if (outdated_menu) {
         UpdateAllMenuItemTextures();
         outdated_menu = false;
     }
-
- 
+    if (Engine::GetInput().KeyJustPressed(CS230::Input::Keys::M)) {
+        Mode7::money = 50;
+    }
     counter += dt;
+    TextureUpdate();
 }
 void MainMenu::Draw() {
     Engine::GetWindow().Clear(0x222222FF);
 
     Math::ivec2 window_size = Engine::GetWindow().GetSize();
+
+    if (highscore) {
+        highscore->Draw(Math::TranslationMatrix(Math::vec2{ 20.0f, 20.0f }));
+    }
+    if (money) {
+        money->Draw(Math::TranslationMatrix(Math::vec2{ static_cast<float>(window_size.x - money->GetSize().x - 20), 20.0f }));
+    }
     
         Math::ivec2 title_pos = { (window_size.x - title_texture->GetSize().x) / 2, window_size.y /2 };;
         title_texture->Draw(Math::TranslationMatrix(title_pos));
@@ -85,6 +93,18 @@ void MainMenu::Draw() {
             menu_tex[i]->Draw(Math::TranslationMatrix(menu_pos));
         }
     }
+}
+
+void MainMenu::TextureUpdate()
+{
+    if (highscore) delete highscore;
+    if (money) delete money;
+
+    highscore = Engine::GetFont(static_cast<int>(Fonts::Outlined))
+        .PrintToTexture("High Score : " + std::to_string(Mode7::high_score), 0xFFFFFFFF);
+
+    money = Engine::GetFont(static_cast<int>(Fonts::Outlined))
+        .PrintToTexture("Money : " + std::to_string(static_cast<int>(Mode7::money)), 0xFFFFFFFF);
 }
 
 

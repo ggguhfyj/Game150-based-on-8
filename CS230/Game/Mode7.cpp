@@ -70,6 +70,11 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
                         drawy = blowup_scale * (windowsize.y / 2 + y) - pill.height * scale;
                         DrawTextureEx(pill, { drawx, drawy }, 0, scale, WHITE);
                     }
+                    else if (it.second.sprite == newMapGen::spritetype::coin) {
+                        drawx = (float)(x * blowup_scale) - (coin.width * scale / 2.0f);
+                        drawy = blowup_scale * (windowsize.y / 2 + y) - coin.height * scale;
+                        DrawTextureEx(coin, { drawx, drawy }, 0, scale, WHITE);
+                    }
                     else {
                         DrawTextureEx(trafficlightsTex, { drawx, drawy }, 0, scale, WHITE);
                     }
@@ -79,6 +84,9 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
                         {
                             if (it.second.sprite == newMapGen::spritetype::pill && pill_get == false) {
                                 pill_get = true;
+                            }
+                            if (it.second.sprite == newMapGen::spritetype::coin) {
+                                money += Get_money;
                             }
                             if (it.second.sprite == newMapGen::spritetype::tree1 || 
                                 it.second.sprite == newMapGen::spritetype::tree2) {
@@ -144,6 +152,7 @@ void Mode7::Load()
     windowtabs = LoadTexture("Assets/windowtabs.png");
     trafficlightsTex = LoadTexture("Assets/tree/dithered-image(2).png");
     pill = LoadTexture("Assets/pill.png");
+    coin = LoadTexture("Assets/coin.png");
     player[0] = LoadTexture("Assets/Player/PlayerLeft-1.png");
     player[1] = LoadTexture("Assets/Player/PlayerLeft-2.png");
     player[2] = LoadTexture("Assets/Player/PlayerLeft-3.png");
@@ -358,11 +367,21 @@ void Mode7::Update()
     float base_speed = 600.0f;
     float speed_multiplier = 1.0f;
     switch (current_difficulty) {
-    case Difficulty::Easy: speed_multiplier = 0.7f; break;
-    case Difficulty::Normal: speed_multiplier = 1.0f; break;
-    case Difficulty::Hard: speed_multiplier = 1.5f; break;
+    case Difficulty::Easy: speed_multiplier = 0.7f; Get_money = 0.0008f; break;
+    case Difficulty::Normal: speed_multiplier = 1.0f; Get_money = 0.0018f; break;
+    case Difficulty::Hard: speed_multiplier = 1.5f; Get_money = 0.0028f; break;
+    case Difficulty::special:  if (!pill_used) {
+        pill_used = true;
+        pill_timer.Reset(30.0);
+    }
+                            speed_multiplier = 2.0f;
+                            Get_money = Get_money = 0.0035f;
+                            break;
     }
     fMaxSpeed = base_speed * speed_multiplier;
+    if (score > high_score) {
+        high_score = score;
+    }
 }
 void Mode7::Draw()
 {
@@ -387,6 +406,7 @@ void Mode7::Draw()
         20,
         YELLOW);
     DrawText(TextFormat("Pill : %s", pill_get ? "ture" : "false"), GetScreenWidth() - 400, 20, 50, RED);
+    DrawText(TextFormat("Money : %d",static_cast<int>(money)), GetScreenWidth() - 400, 80, 30, RED);
     if (pill_used == true) {
         DrawText(TextFormat("pill time remaining : %.2f", pill_timer.GetTime()), 100, 400, 30, RED);
     }

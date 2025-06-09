@@ -2,7 +2,7 @@
 #include "../Engine/GameState.h"
 #include "../Engine/Texture.h"
 
-#define SELECTOPTIONSINSETTING 3
+#define SELECTOPTIONSINSETTING 4
 #define SETTING_TITLE_COLOR 0xFF2233FF          
 #define SETTING_SELECTED_ITEM_COLOR 0xFFFFFFFF  
 #define SETTING_UNSELECTED_ITEM_COLOR 0xFFFFAAFF
@@ -10,7 +10,7 @@
 #define MAX_VOLUME 100
 #define VOLUME_STEP 10
 
-enum class Difficulty { Easy, Normal, Hard };
+enum class Difficulty { Easy, Normal, Hard, special };
 
 class Setting : public CS230::GameState {
 public:
@@ -31,6 +31,7 @@ private:
     Difficulty current_difficulty = Difficulty::Normal;
 public:
     double counter = 0;
+    bool special_open = false;
     CS230::Texture* title_texture;
     int current_select;
     CS230::Texture* menu_tex[SELECTOPTIONSINSETTING];

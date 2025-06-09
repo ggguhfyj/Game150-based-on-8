@@ -8,6 +8,7 @@
 #include "Setting.h"
 #include "..\Game\States.h"
 #include "../Engine/Timer.h"
+#include <random>
 class Mode7 {
 
 private:
@@ -24,6 +25,7 @@ private:
 	static inline float fMaxRotationSpeed = 1.8f;
 
 	static inline bool pill_get = false;
+	static inline float Get_money = 0.0f;
 
 	static inline float fWorldX = 0.0f;
 	static inline float fWorldY = 0.0f;
@@ -48,6 +50,7 @@ private:
 	static inline Texture2D BWplayer[6];
 	static inline Texture2D VPplayer[6];
 	static inline Texture2D pill;
+	static inline Texture2D coin;
 
 	static inline Texture2D FovplayerRight[18];
 	static inline Texture2D FovplayerLeft[18];
@@ -95,10 +98,15 @@ public:
 	static void Draw();
 	static void unload();
 	static void DrawPlayer();
+	static inline float money = 00.0f;
 	static void SetVolume(float volume);
 	static void SetDifficulty(Difficulty diff);
 	static inline int score = 0;
+	static inline int high_score = 0;
 	static inline Difficulty current_difficulty = Difficulty::Normal;
 	static inline bool pill_used = false;
 	static inline CS230::Timer pill_timer = CS230::Timer(0.0);
+	static inline float GetRandomFloat(float min, float max) {
+		return min + (float)rand() / (float)RAND_MAX * (max - min);
+	}
 };

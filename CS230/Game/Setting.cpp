@@ -49,22 +49,39 @@ void Setting::Update([[maybe_unused]] double dt) {
 
     if (current_select == 1) {
         if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Right)) {
-            current_difficulty = static_cast<Difficulty>(
-                (static_cast<int>(current_difficulty) + 1) % 3);
+            if (((static_cast<int>(current_difficulty) + 1) % 4) == static_cast<int>(Difficulty::special)
+                && Mode7::money < 30.0f) {
+                special_open = false;
+            }
+            else {
+                current_difficulty = static_cast<Difficulty>((static_cast<int>(current_difficulty) + 1) % 4);
+                special_open = true;
+                Mode7::SetDifficulty(current_difficulty);
+            }
             outdated_menu = true;
-            Mode7::SetDifficulty(current_difficulty);
         }
+
         if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Left)) {
-            current_difficulty = static_cast<Difficulty>(
-                (static_cast<int>(current_difficulty) - 1 + 3) % 3);
+            if (((static_cast<int>(current_difficulty) - 1 + 4) % 4) == static_cast<int>(Difficulty::special)
+                && Mode7::money < 30.0f) {
+                special_open = false;
+            }
+            else {
+                current_difficulty = static_cast<Difficulty>((static_cast<int>(current_difficulty) - 1 + 4) % 4);
+                special_open = true;
+                Mode7::SetDifficulty(current_difficulty);
+            }
             outdated_menu = true;
-            Mode7::SetDifficulty(current_difficulty);
         }
     }
+
 
     if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Enter)) {
         Engine::GetLogger().LogEvent("Menu Enter: Confirmed " + std::to_string(current_select));
         if (current_select == 2) {
+            if (current_difficulty == Difficulty::special && Mode7::money >= 30) {
+                Mode7::money -= 30;
+            }
             Engine::GetLogger().LogEvent("Setting next state to Mode2 (SpaceShooter)");
             Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::MainMenu));
         }
@@ -147,6 +164,8 @@ std::string Setting::DifficultyToString() const {
     case Difficulty::Easy: return "Easy";
     case Difficulty::Normal: return "Normal";
     case Difficulty::Hard: return "Hard";
+    case Difficulty::special:
+        return special_open ? "Special" : "Special (Locked)";
     default: return "Unknown";
     }
 }

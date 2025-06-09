@@ -33,7 +33,8 @@ public:
 		pole,
 		human,
 		chasm,
-		pill
+		pill,
+		coin
 
 	};
 private:

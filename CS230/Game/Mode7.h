@@ -70,6 +70,8 @@ private:
 	static inline bool right;
 	static inline int counter = 0;
 
+	static inline float current_Fov = 0.0f;
+
 	static inline unsigned char R = 155;
 	static inline unsigned char G = 155;
 	static inline unsigned char B = 155;
@@ -77,8 +79,8 @@ private:
 	static inline unsigned char BASE = 100;
 
 	static inline float fPlayerScreenX; // Player's current X position on the screen
-	static inline float fPlayerHSpeed = 0.0f;      // Player's current horizontal speed
-	static inline float fPlayerHAccel = 300.0f;   // Player's horizontal acceleration
+	static inline float fPlayerHSpeed = 0.0f;		// Player's current horizontal speed
+	static inline float fPlayerHAccel = 300.0f;		// Player's horizontal acceleration
 	static inline float fPlayerHDamping = 200.0f; // Damping for horizontal movement
 	static inline float fMaxPlayerHSpeed = 200.0f;// Maximum horizontal speed for the player
 	static inline Sound sound_breath;

@@ -22,7 +22,7 @@ Color Mode7::DrawFog(Color color)
 void Mode7::DrawMode7Line(int y) //y doesnt skip
 {
     float fSampleDepth = (float)y / (windowsize.y / 2.0f);
-    if (pill_effect == 1) {
+    if (pill_used == true && pill_effect == 1) {
         slope_factor = 1.0f + 1.0f * sinf((float)GetTime() * 2.0f + y * 0.05f);
     }
     else {
@@ -239,8 +239,18 @@ void Mode7::Update()
     if (IsKeyDown(KEY_X)) fFoVHalf -= 1 * GetFrameTime();
 
     if (pill_used == true && pill_effect == 2) {
-            Near_effect = 0.005f * sinf((float)GetTime());
+            Near_effect = 0.006f * sinf((float)GetTime());
             fFoVHalf += Near_effect;
+    }
+    else
+    {
+        if (fFoVHalf > 1.3f) {
+            fFoVHalf -= 0.01f;
+        }
+        else if (fFoVHalf < 1.3f) {
+            fFoVHalf += 0.01f;
+        }
+        
     }
 
     if (IsKeyPressed(KEY_RIGHT)) {
@@ -313,18 +323,18 @@ void Mode7::Update()
         fWorldX -= cosf(fWorldA) * fSpeed * GetFrameTime();
         fWorldY -= sinf(fWorldA) * fSpeed * GetFrameTime();
     }
-    if (pill_used == false && Engine::GetInput().KeyJustPressed(CS230::Input::Keys::E) && pill_get == true) {
+    if (pill_used == false && pill_get == true) {
         pill_used = true;
-        pill_get = false;
         pill_timer.Reset(10.0);
-        pill_effect = GetRandomValue(2, 2);
+        pill_effect = GetRandomValue(1, 2);
     }
     if (pill_used == true) {
+        pill_get = false;
         pill_timer.Update(GetFrameTime());
 
         if (pill_timer.GetTime() <= 0) {
             pill_used = false;
-            fFoVHalf = 1.3f;
+      
         }
     }
 
@@ -402,21 +412,6 @@ void Mode7::Draw()
     DrawPlayer();
 
 
-    DrawText(TextFormat("Speed: %.1f", fSpeed), 100, 100,
-        20,
-        YELLOW);
-    DrawText(TextFormat("fov: %.1f", fFoVHalf), 100, 200,
-        20,
-        YELLOW);
-    DrawText(TextFormat("mousepos: %.1f, %.1f", GetMousePosition().x, GetMousePosition().y), 100, 300,
-        20,
-        YELLOW);
-    DrawText(TextFormat("Pill : %s", pill_get ? "true" : "false"), GetScreenWidth() - 400, 20, 50, RED);
-    if (pill_used == true) {
-        DrawText(TextFormat("pill time remaining : %.2f", pill_timer.GetTime()), 100, 400, 30, RED);
-    }
-    DrawText(TextFormat("score : %d", score), 100, 700, 30, RED);
-    DrawFPS(500, 100);
 }
 void Mode7::unload()
 {
@@ -426,6 +421,7 @@ void Mode7::unload()
 
     UnloadSound(sound_ski_skidding);
     UnloadSound(sound_close_call);
+    UnloadSound(sound_breath);
     StopMusicStream(sound_ski_default);
     UnloadMusicStream(sound_ski_default);
     UnloadMusicStream(sound_wind);

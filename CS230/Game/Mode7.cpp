@@ -22,7 +22,7 @@ Color Mode7::DrawFog(Color color)
 void Mode7::DrawMode7Line(int y) //y doesnt skip
 {
     float fSampleDepth = (float)y / (windowsize.y / 2.0f);
-    if (pill_used == true) {
+    if (pill_effect == 1) {
         slope_factor = 1.0f + 1.0f * sinf((float)GetTime() * 2.0f + y * 0.05f);
     }
     else {

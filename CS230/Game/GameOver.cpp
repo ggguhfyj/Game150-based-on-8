@@ -18,7 +18,9 @@ void GameOver::Unload()
     delete score_texture;
     Mode7::score = 0;
     Mode7::pill_timer = 0;
+    Mode7::pill_get = false;
     Mode7::pill_used = false;
+    Mode7::pill_effect = 0;
 }
 
 void GameOver::Update([[maybe_unused]] double dt)

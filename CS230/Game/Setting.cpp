@@ -50,7 +50,7 @@ void Setting::Update([[maybe_unused]] double dt) {
     if (current_select == 1) {
         if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Right)) {
             if (((static_cast<int>(current_difficulty) + 1) % 4) == static_cast<int>(Difficulty::special)
-                && Mode7::money < 30.0f) {
+                && Mode7::high_score < 30.0f) {
                 special_open = false;
             }
             else {
@@ -63,7 +63,7 @@ void Setting::Update([[maybe_unused]] double dt) {
 
         if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Left)) {
             if (((static_cast<int>(current_difficulty) - 1 + 4) % 4) == static_cast<int>(Difficulty::special)
-                && Mode7::money < 30.0f) {
+                && Mode7::high_score < 30.0f) {
                 special_open = false;
             }
             else {
@@ -79,9 +79,6 @@ void Setting::Update([[maybe_unused]] double dt) {
     if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Enter)) {
         Engine::GetLogger().LogEvent("Menu Enter: Confirmed " + std::to_string(current_select));
         if (current_select == 2) {
-            if (current_difficulty == Difficulty::special && Mode7::money >= 30) {
-                Mode7::money -= 30;
-            }
             Engine::GetLogger().LogEvent("Setting next state to Mode2 (SpaceShooter)");
             Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::MainMenu));
         }

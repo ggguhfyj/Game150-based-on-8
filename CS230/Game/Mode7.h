@@ -24,9 +24,6 @@ private:
 	static inline float fRotationDamping = 2.0f;
 	static inline float fMaxRotationSpeed = 1.8f;
 
-	static inline bool pill_get = false;
-	static inline float Get_money = 0.0f;
-
 	static inline float fWorldX = 0.0f;
 	static inline float fWorldY = 0.0f;
 	static inline float fWorldA = 0.0f;
@@ -50,7 +47,9 @@ private:
 	static inline Texture2D BWplayer[6];
 	static inline Texture2D VPplayer[6];
 	static inline Texture2D pill;
-	static inline Texture2D coin;
+
+	static inline float slope_factor = 1.0f;
+	static inline float Near_effect = 1.0f;
 
 	static inline Texture2D FovplayerRight[18];
 	static inline Texture2D FovplayerLeft[18];
@@ -82,7 +81,7 @@ private:
 	static inline float fPlayerHAccel = 300.0f;   // Player's horizontal acceleration
 	static inline float fPlayerHDamping = 200.0f; // Damping for horizontal movement
 	static inline float fMaxPlayerHSpeed = 200.0f;// Maximum horizontal speed for the player
-
+	static inline Sound sound_breath;
 	static inline Sound sound_close_call;
 	static inline Sound sound_ski_skidding;
 	static inline Music sound_ski_default;
@@ -92,21 +91,26 @@ private:
 	static inline bool windPlaying;
 	static inline float musicVolume = 1.0;
 	static inline float soundVolume = 1.0;
+
+	static inline float breath_timer = 0.0;
+	static inline float breath_interval = 8.0f;
 public:
 	static void Load();
 	static void Update();
 	static void Draw();
 	static void unload();
 	static void DrawPlayer();
-	static inline float money = 00.0f;
 	static void SetVolume(float volume);
 	static void SetDifficulty(Difficulty diff);
 	static inline int score = 0;
 	static inline int high_score = 0;
+	static inline int pill_effect;
+	static inline bool pill_get = false;
 	static inline Difficulty current_difficulty = Difficulty::Normal;
 	static inline bool pill_used = false;
 	static inline CS230::Timer pill_timer = CS230::Timer(0.0);
-	static inline float GetRandomFloat(float min, float max) {
-		return min + (float)rand() / (float)RAND_MAX * (max - min);
+	static inline float RandomBreathInterval() {
+		return 6.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) / (11.0f - 6.0f));
 	}
+
 };

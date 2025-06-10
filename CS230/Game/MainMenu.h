@@ -37,16 +37,16 @@ public:
         return "MainMenu";
     }
 
-private: 
+private:
     void UpdateMenuItemTexture(int index);
     void UpdateAllMenuItemTextures();
 
-public: 
-    double counter = 0; 
+public:
+    double counter = 0;
     CS230::Texture* title_texture;
     CS230::Texture* highscore = nullptr;
-    CS230::Texture* money = nullptr;
-    int current_select; 
+    int current_select;
     CS230::Texture* menu_tex[SELECTOPTIONS];
-    bool outdated_menu; 
+    bool outdated_menu;
+    CS230::Texture* main_menu_texture;
 };

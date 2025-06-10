@@ -21,7 +21,6 @@ void newMapGen::generatesnowTexture()
 	//int ipole_1 = GetRandomValue(3, 7);
 	int itree_2;
 	int pill1 = 1;
-	int coin1 = 1;
 
 	switch (Mode7::current_difficulty) {
 	case Difficulty::Easy:
@@ -66,12 +65,6 @@ void newMapGen::generatesnowTexture()
 		Math::vec2 textureposition = { (float)GetRandomValue(50,1950),(float)GetRandomValue(50,1950) };
 
 		mapsprites.insert({ textureposition, { pill,false } });
-	}
-	for (int i = 0; i < coin1; i++)
-	{
-		Math::vec2 textureposition = { (float)GetRandomValue(50,1950),(float)GetRandomValue(50,1950) };
-
-		mapsprites.insert({ textureposition, { coin,false } });
 	}
 	/*
 	for (int i = 0; i < ipole_1;i++)

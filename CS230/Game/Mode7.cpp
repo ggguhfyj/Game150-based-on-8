@@ -316,7 +316,7 @@ void Mode7::Update()
         fWorldX -= cosf(fWorldA) * fSpeed * GetFrameTime();
         fWorldY -= sinf(fWorldA) * fSpeed * GetFrameTime();
     }
-    if (pill_used == false && Engine::GetInput().KeyJustPressed(CS230::Input::Keys::E)) {
+    if (pill_used == false && Engine::GetInput().KeyJustPressed(CS230::Input::Keys::E) && pill_get == true) {
         pill_used = true;
         pill_get = false;
         pill_timer.Reset(10.0);

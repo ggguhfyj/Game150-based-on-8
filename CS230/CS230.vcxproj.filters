@@ -106,6 +106,8 @@
     <ClCompile Include="Game\newmapGen.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Game\GameOver.cpp" />
+    <ClCompile Include="Game\Setting.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\logger.h">
@@ -215,6 +217,14 @@
     </ClInclude>
     <ClInclude Include="Game\newmapGen.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\GameOver.h" />
+    <ClInclude Include="Game\Setting.h" />
+    <ClInclude Include="Engine\Timer.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

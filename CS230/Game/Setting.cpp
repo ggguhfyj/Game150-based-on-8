@@ -49,18 +49,32 @@ void Setting::Update([[maybe_unused]] double dt) {
 
     if (current_select == 1) {
         if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Right)) {
-            current_difficulty = static_cast<Difficulty>(
-                (static_cast<int>(current_difficulty) + 1) % 3);
+            if (((static_cast<int>(current_difficulty) + 1) % 4) == static_cast<int>(Difficulty::special)
+                && Mode7::high_score < 30.0f) {
+                special_open = false;
+            }
+            else {
+                current_difficulty = static_cast<Difficulty>((static_cast<int>(current_difficulty) + 1) % 4);
+                special_open = true;
+                Mode7::SetDifficulty(current_difficulty);
+            }
             outdated_menu = true;
-            Mode7::SetDifficulty(current_difficulty);
         }
+
         if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Left)) {
-            current_difficulty = static_cast<Difficulty>(
-                (static_cast<int>(current_difficulty) - 1 + 3) % 3);
+            if (((static_cast<int>(current_difficulty) - 1 + 4) % 4) == static_cast<int>(Difficulty::special)
+                && Mode7::high_score < 30.0f) {
+                special_open = false;
+            }
+            else {
+                current_difficulty = static_cast<Difficulty>((static_cast<int>(current_difficulty) - 1 + 4) % 4);
+                special_open = true;
+                Mode7::SetDifficulty(current_difficulty);
+            }
             outdated_menu = true;
-            Mode7::SetDifficulty(current_difficulty);
         }
     }
+
 
     if (Engine::GetInput().KeyJustReleased(CS230::Input::Keys::Enter)) {
         Engine::GetLogger().LogEvent("Menu Enter: Confirmed " + std::to_string(current_select));
@@ -86,7 +100,7 @@ void Setting::Draw() {
 
     Math::ivec2 window_size = Engine::GetWindow().GetSize();
 
-    Math::ivec2 title_pos = { (window_size.x - title_texture->GetSize().x) / 2, window_size.y / 2 };;
+    Math::ivec2 title_pos = { (window_size.x - title_texture->GetSize().x) / 2, window_size.y / 2 + 50 };;
     title_texture->Draw(Math::TranslationMatrix(title_pos));
 
     for (int i = 0; i < SELECTOPTIONSINSETTING; ++i) {
@@ -147,6 +161,8 @@ std::string Setting::DifficultyToString() const {
     case Difficulty::Easy: return "Easy";
     case Difficulty::Normal: return "Normal";
     case Difficulty::Hard: return "Hard";
+    case Difficulty::special:
+        return special_open ? "Special" : "Special (Locked)";
     default: return "Unknown";
     }
 }

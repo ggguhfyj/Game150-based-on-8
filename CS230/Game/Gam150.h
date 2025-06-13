@@ -50,7 +50,7 @@ private:
     Shader fish;
     Shader scanlines;
     Shader downhillShader; // <--- Add this
-    float hillFactor = 0.5f;
+    float hillFactor = 0.4f;
     int drawmode = 1;
     CS230::Texture* timer_texture; // default constructor errors
     double timer;

@@ -22,6 +22,13 @@ Color Mode7::DrawFog(Color color)
 void Mode7::DrawMode7Line(int y) //y doesnt skip
 {
     float fSampleDepth = (float)y / (windowsize.y / 2.0f);
+    if (pill_effect == 1) {
+        if (pill_effect == 1)
+            slope_factor = 1.0f + 1.0f * sinf((float)GetTime() * 2.0f + y * 0.05f);
+    }
+    else {
+        slope_factor = 1.0f;
+    }
 
     float fStartX = (frustum.Far1.x - frustum.Near1.x) / (fSampleDepth)+frustum.Near1.x;
     float fStartY = (frustum.Far1.y - frustum.Near1.y) / (fSampleDepth)+frustum.Near1.y;
@@ -51,48 +58,81 @@ void Mode7::DrawMode7Line(int y) //y doesnt skip
                 double dx = it.first.x - (double)texX;
                 double dy = it.first.y - (double)texY;
 
-                float scale = 2.5f * fSampleDepth; //the reason why I used 2.5f is make scale size more maximize
+                float scale = 2.5f * fSampleDepth * slope_factor; //the reason why I used 2.5f is make scale size more maximize
 
                 if (std::hypot(dx, dy) < 50.0f)
                 {
 
                     float drawx = (float)(x * blowup_scale) - (trafficlightsTex.width * scale / 2.0f);
                     float drawy = blowup_scale * (windowsize.y / 2 + y) - trafficlightsTex.height * scale;
-
-                    DrawTextureEx(trafficlightsTex, { drawx, drawy }, 0, scale, WHITE);
-                    
-                    if ((blowup_scale * (windowsize.y / 2 + y)) > 750 && (blowup_scale * (windowsize.y / 2 + y)) < 800)
-                    {
-                        if ((x * blowup_scale) > 550 && (x * blowup_scale) < 650)
-                        {
-                    
-                        Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::GameOver));
-                        }
-                        
+                    if (it.second.sprite == newMapGen::spritetype::pill && pill_get == false && pill_timer.GetTime() == 0) {
+                        drawx = (float)(x * blowup_scale) - (pill.width * scale / 2.0f);
+                        drawy = blowup_scale * (windowsize.y / 2 + y) - pill.height * scale + 10.f;
+                        DrawTextureEx(pill, { drawx, drawy }, 0, scale, WHITE);
                     }
-                    //if ((blowup_scale * (windowsize.y / 2 + y)) > 650 && (blowup_scale * (windowsize.y / 2 + y)) < 00)
-                    //if (((x * blowup_scale) > -50) && ((x * blowup_scale) < 1250))
-                    //{
-                    //    if (!close_call_playing)
-                    //    {
-                    //        //this is happening way too much causing lag spikes
-                    //        float centerX = windowsize.x * blowup_scale / 2.0f;
-                    //        float distanceFromCenter = abs(x * blowup_scale - centerX);
-                    //        float maxDistance = windowsize.x * blowup_scale / 2.0f;
 
-                    //        float volume = 1.0f - (distanceFromCenter / maxDistance) * 0.9f;
-                    //        volume = fmax(0.1f, volume);
+                    else if (it.second.sprite == newMapGen::spritetype::tree1 ||
+                        it.second.sprite == newMapGen::spritetype::tree2) {
+                        DrawTextureEx(trafficlightsTex, { drawx, drawy }, 0, scale, WHITE);
+                    }
 
-                    //        SetSoundVolume(sound_close_call, volume);
-                    //        PlaySound(sound_close_call);
-                    //        close_call_playing = true;
-                    //        Engine::GetLogger().LogEvent("playing close call music now");
-                    //    }
-                    //    
+                    if ((x * blowup_scale) > 550 && (x * blowup_scale) < 650)
+                        if ((blowup_scale * (windowsize.y / 2 + y)) > 750 && (blowup_scale * (windowsize.y / 2 + y)) < 800)
+                        {
+                            if (it.second.sprite == newMapGen::spritetype::pill && pill_get == false) {
+                                pill_get = true;
+                            }
+                            if (it.second.sprite == newMapGen::spritetype::tree1 ||
+                                it.second.sprite == newMapGen::spritetype::tree2) {
+                                Engine::GetGameStateManager().SetNextGameState(static_cast<int>(States::GameOver));
+                            }
+                        }
+                    if (blowup_scale * (windowsize.y / 2 + y) > 700 && blowup_scale * (windowsize.y / 2 + y) < 850) {
+                        if (!close_call_playing) {
+                            if (it.second.sprite == newMapGen::spritetype::tree1 ||
+                                it.second.sprite == newMapGen::spritetype::tree2) {
+                                score += 1;
+                                if (pill_used) {
+                                    score += 2;
+                                }
+                            }
 
-                    //}
-                    it.second.is_drawn = true;
+                            float centerX = windowsize.x * blowup_scale / 2.0f;
+                            float distanceFromCenter = abs(x * blowup_scale - centerX);
+                            float maxDistance = windowsize.x * blowup_scale / 2.0f;
+
+                            float volume = 1.0f - (distanceFromCenter / maxDistance) * 0.9f;
+                            volume = fmax(0.1f, volume);
+
+                            SetSoundVolume(sound_close_call, volume);
+                            PlaySound(sound_close_call);
+                            close_call_playing = true;
+                            Engine::GetLogger().LogEvent("playing close call music now");
+                        }
+                    }
                 }
+                //if ((blowup_scale * (windowsize.y / 2 + y)) > 650 && (blowup_scale * (windowsize.y / 2 + y)) < 00)
+                //if (((x * blowup_scale) > -50) && ((x * blowup_scale) < 1250))
+                //{
+                //    if (!close_call_playing)
+                //    {
+                //        //this is happening way too much causing lag spikes
+                //        float centerX = windowsize.x * blowup_scale / 2.0f;
+                //        float distanceFromCenter = abs(x * blowup_scale - centerX);
+                //        float maxDistance = windowsize.x * blowup_scale / 2.0f;
+
+                //        float volume = 1.0f - (distanceFromCenter / maxDistance) * 0.9f;
+                //        volume = fmax(0.1f, volume);
+
+                //        SetSoundVolume(sound_close_call, volume);
+                //        PlaySound(sound_close_call);
+                //        close_call_playing = true;
+                //        Engine::GetLogger().LogEvent("playing close call music now");
+                //    }
+                //    
+
+                //}
+                it.second.is_drawn = true;
             }
         }
     }
@@ -105,6 +145,7 @@ void Mode7::Load()
     texMap = LoadTexture("CreatedMap.png");
     windowtabs = LoadTexture("Assets/windowtabs.png");
     trafficlightsTex = LoadTexture("Assets/tree/dithered-image(2).png");
+    pill = LoadTexture("Assets/pill.png");
     player[0] = LoadTexture("Assets/Player/PlayerLeft-1.png");
     player[1] = LoadTexture("Assets/Player/PlayerLeft-2.png");
     player[2] = LoadTexture("Assets/Player/PlayerLeft-3.png");
@@ -165,7 +206,7 @@ void Mode7::Load()
     FovplayerLeft[15] = LoadTexture("Assets/Player/POV/Left hand/16.png");
     FovplayerLeft[16] = LoadTexture("Assets/Player/POV/Left hand/17.png");
     FovplayerLeft[17] = LoadTexture("Assets/Player/POV/Left hand/18.png");
-
+    baldie = LoadTexture("Assets/PLAY.png");
 
 
     imgMap = LoadImageFromTexture(texMap);
@@ -173,7 +214,10 @@ void Mode7::Load()
     fPlayerScreenX = (float)Engine::GetWindow().GetSize().x / 2;
 
     sound_close_call = LoadSound("Assets/close_call.wav");
+    WHOO = LoadSound("Assets/WHOO.wav");
+    THUD = LoadSound("Assets/THUD.wav");
     sound_ski_skidding = LoadSound("Assets/ski_skidding.wav");
+    sound_breath = LoadSound("Assets/breath.wav");
     sound_ski_default = LoadMusicStream("Assets/ski_default.wav");
     sound_wind = LoadMusicStream("Assets/wind_.wav");
     isSkiddingSoundPlaying = false;
@@ -185,7 +229,7 @@ void Mode7::Load()
 void Mode7::Update()
 {
     //-171
-    if (IsKeyDown(KEY_Q)) fNear += 100 * GetFrameTime();
+   /* if (IsKeyDown(KEY_Q)) fNear += 100 * GetFrameTime();
 
     if (IsKeyDown(KEY_A)) fNear -= 100 * GetFrameTime();
 
@@ -193,10 +237,20 @@ void Mode7::Update()
 
     if (IsKeyDown(KEY_S)) fFar -= 500 * GetFrameTime();
 
-    if (IsKeyDown(KEY_Z)) fFoVHalf += 0.1f * GetFrameTime();
+    if (IsKeyDown(KEY_Z)) fFoVHalf += 1 * GetFrameTime();
 
-    if (IsKeyDown(KEY_X)) fFoVHalf -= 0.1f * GetFrameTime();
+    if (IsKeyDown(KEY_X)) fFoVHalf -= 1 * GetFrameTime();*/
 
+    // Changed pill effect logic to prevent permanence
+    if (pill_used == true && pill_effect == 2) {
+        // Oscillate fFoVHalf around its default value (1.4f)
+        float effect_amplitude = 0.05f; // Adjust this for more or less intensity
+        float effect_speed = 5.0f; // Adjust this for faster or slower oscillation
+        fFoVHalf = 1.4f + (effect_amplitude * sinf((float)GetTime() * effect_speed));
+    }
+    else {
+        fFoVHalf = 1.4f; // Always reset to default when pill effect is not active
+    }
 
     if (IsKeyPressed(KEY_RIGHT)) {
         playersprites = 0;
@@ -252,11 +306,14 @@ void Mode7::Update()
 
     }
 
+    if (score == 10) {
+        SetDifficulty(static_cast<Difficulty>(static_cast<int>(current_difficulty) + 1));
+    }
 
     fWorldA += fRotationSpeed * GetFrameTime();
     skyOffset += 400.0f * fRotationSpeed * GetFrameTime();
 
-    if (IsKeyDown(KEY_UP)) {
+   /* if (IsKeyDown(KEY_UP)) {
         fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
         fWorldY += sinf(fWorldA) * fSpeed * GetFrameTime();
     }
@@ -264,6 +321,27 @@ void Mode7::Update()
     if (IsKeyDown(KEY_DOWN)) {
         fWorldX -= cosf(fWorldA) * fSpeed * GetFrameTime();
         fWorldY -= sinf(fWorldA) * fSpeed * GetFrameTime();
+    }*/
+
+    if (pill_used == false && pill_get == true) {
+        pill_used = true;
+        pill_get = false;
+        pill_timer.Reset(10.0);
+        pill_effect = GetRandomValue(0, 2);
+
+        PlaySound(WHOO);
+        PlaySound(THUD);
+        drawbaldie = true;
+        baldie_alpha = 0.5f; 
+        baldie_timer.Reset(1.5); 
+    }
+    if (pill_used == true) {
+        pill_timer.Update(GetFrameTime());
+
+        if (pill_timer.GetTime() <= 0) {
+            pill_used = false;
+            pill_get = false;
+        }
     }
 
     fWorldX += cosf(fWorldA) * fSpeed * GetFrameTime();
@@ -291,24 +369,61 @@ void Mode7::Update()
     }
 
     UpdateMusicStream(sound_ski_default);
+    UpdateMusicStream(sound_wind);
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
         if (!isSkiddingSoundPlaying) {
-            //PlaySound(sound_ski_skidding);
+            PlaySound(sound_ski_skidding);
             isSkiddingSoundPlaying = true;
-            //Engine::GetLogger().LogEvent("playing music now");
+            Engine::GetLogger().LogEvent("playing music now");
         }
     }
     else {
         isSkiddingSoundPlaying = false;
     }
+    breath_timer += GetFrameTime();
+    if (breath_timer >= breath_interval) {
+        breath_timer -= breath_interval;
+        PlaySound(sound_breath);
+        breath_interval = RandomBreathInterval();
+    }
     float base_speed = 600.0f;
     float speed_multiplier = 1.0f;
     switch (current_difficulty) {
-    case Difficulty::Easy: speed_multiplier = 0.7f; break;
+    case Difficulty::Easy: speed_multiplier = 0.7f;  break;
     case Difficulty::Normal: speed_multiplier = 1.0f; break;
-    case Difficulty::Hard: speed_multiplier = 1.5f; break;
+    case Difficulty::Hard: speed_multiplier = 1.5f;  break;
+    case Difficulty::special:  if (!pill_used) {
+        pill_used = true;
+        pill_timer.Reset(30.0);
+    }
+                            speed_multiplier = 2.0f;
+
+                            break;
     }
     fMaxSpeed = base_speed * speed_multiplier;
+    if (score > high_score) {
+        high_score = score;
+    }
+
+    // Baldie effect logic
+    baldie_timer.Update(GetFrameTime()); // Update baldie timer
+
+    if (drawbaldie) {
+        // Fade in quickly (from 0.5 to 1.0, then back to 0.5 if it was fading in from 0)
+        // Since it starts at 0.5, we just need to handle fade out
+        if (baldie_timer.GetTime() <= 0) { // If baldie timer runs out, start fading out and stop drawing
+            drawbaldie = false; // This will move to the else block for fading out
+        }
+        // Apply shaking
+        baldie_shake_offset = sinf((float)GetTime() * baldie_shake_speed) * baldie_shake_amplitude;
+    }
+    else {
+        // Fade out slowly
+        baldie_alpha -= baldie_fade_speed_out * GetFrameTime();
+        if (baldie_alpha < 0.0f) {
+            baldie_alpha = 0.0f;
+        }
+    }
 }
 void Mode7::Draw()
 {
@@ -321,17 +436,15 @@ void Mode7::Draw()
     }
     //DrawTexturePro(texSky, skySource, skyDest, { 0, 0 }, 0.0f, WHITE);
     DrawPlayer();
+    if (baldie_alpha > 0.0f) // Draw if effect is active or still fading out
+    {
+        Color baldie_color = WHITE;
+        baldie_color.a = (unsigned char)(baldie_alpha * 255); // Set alpha channel
 
-
-    DrawText(TextFormat("Speed: %.1f", fSpeed), 100, 100,
-        20,
-        YELLOW);
-    DrawText(TextFormat("fov: %.1f", fFoVHalf), 100, 200,
-        20,
-        YELLOW);
-    DrawText(TextFormat("mousepos: %.1f, %.1f", GetMousePosition().x, GetMousePosition().y), 100, 300,
-        20,
-        YELLOW);
+        // Draw baldie texture at {0,0} with calculated shake and alpha
+        DrawTextureEx(baldie, { 0.0f + baldie_shake_offset, 0.0f }, 0.0f, 1.0f, baldie_color);
+    }
+    DrawText(TextFormat("score : %d", score), 100, 700, 30, RED);
     DrawFPS(500, 100);
 }
 void Mode7::unload()
@@ -345,7 +458,9 @@ void Mode7::unload()
     StopMusicStream(sound_ski_default);
     UnloadMusicStream(sound_ski_default);
     UnloadMusicStream(sound_wind);
+    StopSound(sound_breath);
     newMapGen::UnloadTexture();
+
 }
 void Mode7::DrawPlayer()
 {
@@ -386,6 +501,7 @@ void Mode7::SetVolume(float volume)
     SetMusicVolume(sound_ski_default, musicVolume);
     SetSoundVolume(sound_ski_skidding, soundVolume);
     SetSoundVolume(sound_close_call, soundVolume);
+    SetSoundVolume(sound_breath, soundVolume);
     SetMusicVolume(sound_wind, musicVolume);
 }
 

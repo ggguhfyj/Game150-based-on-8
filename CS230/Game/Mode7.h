@@ -7,6 +7,8 @@
 #include "..\Engine\Window.h"
 #include "Setting.h"
 #include "..\Game\States.h"
+#include "../Engine/Timer.h"
+#include <random>
 class Mode7 {
 
 private:
@@ -28,7 +30,7 @@ private:
 	static inline float fNear = -171;
 	static inline float fFar = 28;
 	//static inline float fFoVHalf = PI / 4.0f;
-	static inline float fFoVHalf = 1.45f;
+	static inline float fFoVHalf = 1.4f;
 	static inline float fSpeed = 200.0f;
 	static inline float fMaxSpeed = 600.0f;
 	static inline float fStartSpeed = 0.0f;
@@ -44,6 +46,19 @@ private:
 	static inline Texture2D player[6];
 	static inline Texture2D BWplayer[6];
 	static inline Texture2D VPplayer[6];
+	static inline Texture2D pill;
+
+	static inline Texture2D baldie;
+	static inline float baldie_alpha = 0.0f; // Transparency for baldie texture
+	static inline float baldie_fade_speed_in = 2.0f; // Speed for fading in
+	static inline float baldie_fade_speed_out = 1.0f; // Speed for fading out (halved duration)
+	static inline float baldie_shake_amplitude = 80.0f; // Amplitude of side-to-side shake (increased)
+	static inline float baldie_shake_speed = 30.0f; // Speed/frequency of shake
+	static inline float baldie_shake_offset = 0.0f; // Current shake offset
+
+
+	static inline float slope_factor = 1.0f;
+	static inline float Near_effect = 1.0f;
 
 	static inline Texture2D FovplayerRight[18];
 	static inline Texture2D FovplayerLeft[18];
@@ -64,6 +79,8 @@ private:
 	static inline bool right;
 	static inline int counter = 0;
 
+	static inline bool drawbaldie = false;
+
 	static inline unsigned char R = 155;
 	static inline unsigned char G = 155;
 	static inline unsigned char B = 155;
@@ -75,8 +92,10 @@ private:
 	static inline float fPlayerHAccel = 300.0f;   // Player's horizontal acceleration
 	static inline float fPlayerHDamping = 200.0f; // Damping for horizontal movement
 	static inline float fMaxPlayerHSpeed = 200.0f;// Maximum horizontal speed for the player
-
+	static inline Sound sound_breath;
 	static inline Sound sound_close_call;
+	static inline Sound WHOO;
+	static inline Sound THUD;
 	static inline Sound sound_ski_skidding;
 	static inline Music sound_ski_default;
 	static inline Music sound_wind;
@@ -86,7 +105,8 @@ private:
 	static inline float musicVolume = 1.0;
 	static inline float soundVolume = 1.0;
 
-	static inline Difficulty current_difficulty = Difficulty::Normal;
+	static inline float breath_timer = 0.0;
+	static inline float breath_interval = 8.0f;
 public:
 	static void Load();
 	static void Update();
@@ -95,4 +115,16 @@ public:
 	static void DrawPlayer();
 	static void SetVolume(float volume);
 	static void SetDifficulty(Difficulty diff);
+	static inline int score = 0;
+	static inline int high_score = 0;
+	static inline int pill_effect;
+	static inline bool pill_get = false;
+	static inline Difficulty current_difficulty = Difficulty::Normal;
+	static inline bool pill_used = false;
+	static inline CS230::Timer pill_timer = CS230::Timer(0.0);
+	static inline CS230::Timer baldie_timer = CS230::Timer(0.0); // Timer for baldie effect duration
+	static inline float RandomBreathInterval() {
+		return 6.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) / (11.0f - 6.0f));
+	}
+
 };

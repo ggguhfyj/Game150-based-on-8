@@ -11,6 +11,7 @@ Created:    March 8, 2023
 #pragma once
 #include "../Engine/GameState.h"
 #include "../Engine/Texture.h"
+#include "Mode7.h"
 
 
 
@@ -31,18 +32,21 @@ public:
     void Update(double dt) override;
     void Unload() override;
     void Draw() override;
+    void TextureUpdate();
     std::string GetName() override {
         return "MainMenu";
     }
 
-private: 
+private:
     void UpdateMenuItemTexture(int index);
     void UpdateAllMenuItemTextures();
 
-public: 
-    double counter = 0; 
+public:
+    double counter = 0;
     CS230::Texture* title_texture;
-    int current_select; 
+    CS230::Texture* highscore = nullptr;
+    int current_select;
     CS230::Texture* menu_tex[SELECTOPTIONS];
-    bool outdated_menu; 
+    bool outdated_menu;
+    CS230::Texture* main_menu_texture;
 };

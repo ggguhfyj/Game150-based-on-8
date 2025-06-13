@@ -1,6 +1,7 @@
 #pragma once
 #include "../Engine/Gamestate.h"
 #include "../Engine/Font.h"
+#include "Mode7.h"
 
 #define GAMEOVER_TITLE_COLOR 0x33c45aFF          
 #define GAMEOVER_SELECTED_ITEM_COLOR 0xFFFFFFFF  

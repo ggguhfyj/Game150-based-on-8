@@ -17,9 +17,32 @@ void newMapGen::generatesnowTexture()
 	BeginTextureMode(target);
 	
 	//int ichasm_1 = GetRandomValue(3, 7);
-	int itree_1 =  GetRandomValue(3, 7);
+	int itree_1;
 	//int ipole_1 = GetRandomValue(3, 7);
-	int itree_2 = GetRandomValue(3, 7);
+	int itree_2;
+	int pill1 = 1;
+
+	switch (Mode7::current_difficulty) {
+	case Difficulty::Easy:
+		itree_1 = GetRandomValue(1, 4);
+		itree_2 = GetRandomValue(1, 4);
+		break;
+	case Difficulty::Normal:
+		itree_1 = GetRandomValue(3, 7);
+		itree_2 = GetRandomValue(3, 7);
+		break;
+	case Difficulty::Hard:
+		itree_1 = GetRandomValue(5, 10);
+		itree_2 = GetRandomValue(5, 10);
+		break;
+	case Difficulty::special:
+		itree_1 = GetRandomValue(8, 11);
+		itree_2 = GetRandomValue(8, 11);
+	default:
+		itree_1 = GetRandomValue(3, 7);
+		itree_2 = GetRandomValue(3, 7);
+		break;
+	}
 	
 	DrawTexture(snow_texture,0,0,WHITE);
 
@@ -36,7 +59,14 @@ void newMapGen::generatesnowTexture()
 		DrawTextureV(shadow_for_tree2_tex, { (float)textureposition.x,(float)textureposition.y }, WHITE);
 		mapsprites.insert({ textureposition, { tree2,false } });
 
-	}/*
+	}
+	for (int i = 0; i < pill1; i++)
+	{
+		Math::vec2 textureposition = { (float)GetRandomValue(50,1950),(float)GetRandomValue(50,1950) };
+
+		mapsprites.insert({ textureposition, { pill,false } });
+	}
+	/*
 	for (int i = 0; i < ipole_1;i++)
 	{
 		Math::vec2 textureposition = { (float)GetRandomValue(50,1950),(float)GetRandomValue(50,1950) };
